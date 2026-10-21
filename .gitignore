@@ -1,9 +1,24 @@
 .venv/
 __pycache__/
 /data/
-/artifacts/
+/artifacts/*
+!/artifacts/README.md
+!/artifacts/main/
+/artifacts/main/*
+!/artifacts/main/derived/
+!/artifacts/main/training/
+/artifacts/main/training/*
+!/artifacts/main/training/sasrec_history_20260908T085159839650Z.json
+!/artifacts/main/training/sasrec_history_20260908T085655994343Z.json
+!/artifacts/main/training/sasrec_history_20260908T090154248919Z.json
 
-/docs
+/docs/notes.md
 
-/checkpoints/*.pt
-/checkpoints
+/checkpoints/*
+!/checkpoints/README.md
+
+/benchmarks/*
+!/benchmarks/amazon-beauty/
+!/benchmarks/amazon-industrial-scientific/
+!/benchmarks/main-comparison/
+!/benchmarks/movielens-1m/

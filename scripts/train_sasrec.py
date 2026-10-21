@@ -24,6 +24,7 @@ from src.models.sasrec import SASRec, sasrec_loss
 
 DATA_DIR = Path("data/processed")
 CHECKPOINT_DIR = Path("checkpoints")
+HISTORY_DIR = Path("artifacts/main/training")
 
 CONFIG = {
     "max_len": 50,
@@ -49,6 +50,7 @@ def set_seed(seed):
 
 
 def save_history(history, path):
+    path.parent.mkdir(parents=True, exist_ok=True)
     # Replace the previous snapshot only after the new JSON is fully written.
     temporary_path = path.with_suffix(".json.tmp")
     temporary_path.write_text(
@@ -335,7 +337,7 @@ def main():
 
     started_at = datetime.now(timezone.utc)
     run_id = started_at.strftime("%Y%m%dT%H%M%S%fZ")
-    history_path = CHECKPOINT_DIR / f"sasrec_history_{run_id}.json"
+    history_path = HISTORY_DIR / f"sasrec_history_{run_id}.json"
     history = {
         "run_id": run_id,
         "started_at": started_at.isoformat(),

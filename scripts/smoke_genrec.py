@@ -41,7 +41,7 @@ def main():
     parser.add_argument("--beam-size", type=int, default=200)
     parser.add_argument("--k", type=int, default=50)
     parser.add_argument(
-        "--output", type=Path, default=Path("artifacts/genrec_smoke.json")
+        "--output", type=Path, default=Path("artifacts/main/smoke/genrec_smoke.json")
     )
     args = parser.parse_args()
     if args.num_users <= 0 or args.k <= 0 or args.beam_size < args.k:

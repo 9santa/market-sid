@@ -22,6 +22,7 @@ from src.data.embedding_cache import embedding_metadata, load_embedding_cache
 
 DATA_DIR = Path("data/processed")
 CHECKPOINT_DIR = Path("checkpoints")
+HISTORY_DIR = Path("artifacts/main/training")
 CHECKPOINT_DIR.mkdir(exist_ok=True)
 
 
@@ -33,6 +34,7 @@ def set_seed(seed):
 
 
 def save_history(history, path):
+    path.parent.mkdir(parents=True, exist_ok=True)
     # Keep the last complete snapshot if writing the next one is interrupted.
     temporary_path = path.with_suffix(".json.tmp")
     temporary_path.write_text(
@@ -447,7 +449,7 @@ def main():
 
     started_at = datetime.now(timezone.utc)
     run_id = started_at.strftime("%Y%m%dT%H%M%S%fZ")
-    history_path = CHECKPOINT_DIR / f"two_tower_history_{run_id}.json"
+    history_path = HISTORY_DIR / f"two_tower_history_{run_id}.json"
     history = {
         "run_id": run_id,
         "started_at": started_at.isoformat(),
@@ -585,8 +587,10 @@ def main():
     print(json.dumps(all_metrics, indent=2))
 
     if not args.smoke:
+        metrics_dir = Path("artifacts/main/evaluation")
+        metrics_dir.mkdir(parents=True, exist_ok=True)
         with open(
-            CHECKPOINT_DIR / "two_tower_metrics.json",
+            metrics_dir / "two_tower_metrics.json",
             "w",
         ) as f:
             json.dump(
