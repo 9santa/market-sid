@@ -1,0 +1,2761 @@
+{
+  "review_date": "2026-09-19",
+  "scope": "Existing local evidence reviewed for the research notebook. Raw files are generally Git-ignored. File identity is not proof that the checkpoint path still contains the original weights. No model runs were performed.",
+  "artifact_count": 118,
+  "artifacts": [
+    {
+      "path": "artifacts/genrec_content_C_test_prefix_survival_metrics.json",
+      "sha256": "7ee1dcea32b0462e6d648e6d587cbce74fe66d61af82e7f910ce176be1ade14d",
+      "bytes": 3156,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_C_best.pt",
+        "checkpoint_epoch": 50,
+        "sid_source": "content",
+        "split": "test",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 64
+      }
+    },
+    {
+      "path": "artifacts/genrec_diagnosis.json",
+      "sha256": "66aa87604bcc85bbec3419a5a751e952f9d5e775386d6b9306056ffc473bf0fd",
+      "bytes": 7420,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "artifacts/genrec_experiments/balanced.json",
+      "sha256": "c074aca717f08829fe29a12fdbcc40ccdcfc8cb55e96cf945e239cf503607bc9",
+      "bytes": 100883,
+      "recorded_metadata": {
+        "best_epoch": 5,
+        "selection_metric": "valid ndcg@10",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0001,
+          "weight_decay": 0.0001,
+          "epochs": 5,
+          "patience": 3,
+          "seed": 42,
+          "normalize_valid": true,
+          "content_features": false,
+          "sampling": "recent"
+        },
+        "source_checkpoint": "checkpoints/genrec_improved_best.pt"
+      },
+      "recorded_epoch_rows": 6
+    },
+    {
+      "path": "artifacts/genrec_experiments/balanced_extended.json",
+      "sha256": "7b65b74532504f68bded03130bcae75fcff709b915765cf89c8072b44364b06e",
+      "bytes": 110763,
+      "recorded_metadata": {
+        "best_epoch": 10,
+        "selection_metric": "valid ndcg@10",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0001,
+          "weight_decay": 0.0001,
+          "epochs": 10,
+          "patience": 3,
+          "seed": 42,
+          "normalize_valid": true,
+          "content_features": false,
+          "sampling": "recent"
+        },
+        "source_checkpoint": "checkpoints/genrec_balanced_best.pt"
+      },
+      "recorded_epoch_rows": 11
+    },
+    {
+      "path": "artifacts/genrec_experiments/baseline_valid.json",
+      "sha256": "1da971d029d13c1b3c5385c69613986660e8f0c30155af0db1e122846ced08a6",
+      "bytes": 1638,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_best.pt",
+        "checkpoint_epoch": 20,
+        "split": "valid",
+        "num_users": 2048,
+        "beam_size": 100,
+        "batch_size": 32
+      }
+    },
+    {
+      "path": "artifacts/genrec_experiments/baseline_valid_random.json",
+      "sha256": "7aa091fb1adf298ccbf4c0af9817c5e2c00a73b1240e487448b17795cf7e9660",
+      "bytes": 23905,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_best.pt",
+        "checkpoint_epoch": 20,
+        "split": "valid",
+        "num_users": 2048,
+        "beam_size": 100,
+        "batch_size": 32,
+        "normalize_valid": false
+      }
+    },
+    {
+      "path": "artifacts/genrec_experiments/content_adapted.json",
+      "sha256": "cffe7721a452380f5a85f7e669982c737862c013997635bb73a7f7aef0b92794",
+      "bytes": 29717,
+      "recorded_metadata": {
+        "best_epoch": 0,
+        "selection_metric": "valid ndcg@10",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 20,
+          "patience": 3,
+          "seed": 42,
+          "normalize_valid": true,
+          "content_features": true
+        },
+        "source_checkpoint": "checkpoints/genrec_improved_best.pt"
+      },
+      "recorded_epoch_rows": 4
+    },
+    {
+      "path": "artifacts/genrec_experiments/decoder_benchmark.json",
+      "sha256": "e5ae266d02cf68f35959254473e05c6e911cdcd5f29fd4b15ad09e1c9e80bc03",
+      "bytes": 975,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "artifacts/genrec_experiments/directional_tuning.json",
+      "sha256": "62ab95ed9d5b0aaeaa40187deaa0cc2d2b8571bc6502904c5e99e0362e315ed7",
+      "bytes": 91243,
+      "recorded_metadata": {
+        "settings": {
+          "checkpoint": "checkpoints/genrec_improved_best.pt",
+          "checkpoint_sha256": "235a889b22761d29d6b1baeb22931e538e0c2c2f110f6512583ef95a73ad3e2e",
+          "memory": "checkpoints/genrec_directional.npz",
+          "beam_size": 200,
+          "neighbor_k": 100,
+          "prior_weight": 4.0,
+          "selection_metric": "valid ndcg@10"
+        }
+      }
+    },
+    {
+      "path": "artifacts/genrec_experiments/final_tuning.json",
+      "sha256": "4235e31f1327281a2d2b50be175b1e6e55ccf9b2a9fbfc949db38c4ccf472101",
+      "bytes": 91327,
+      "recorded_metadata": {
+        "settings": {
+          "checkpoint": "checkpoints/genrec_best.pt",
+          "checkpoint_sha256": "8baed1bf6c83e8a1aac1e6e743867bd4d0bec0f568675f446255cd333c51cc4d",
+          "memory": "checkpoints/genrec_collaborative.npz",
+          "memory_sha256": "dec887deff7591452de6622bfcb4c04b15f6a268b91d808d82dfd2a9d9c849d9",
+          "beam_size": 200,
+          "neighbor_k": 100,
+          "prior_weight": 4.0,
+          "selection_metric": "valid ndcg@10"
+        }
+      }
+    },
+    {
+      "path": "artifacts/genrec_experiments/finetune.json",
+      "sha256": "8585510b777acab72baf6e64bd7f17042929923a37a0d9bcdd9d3c45da95d249",
+      "bytes": 33238,
+      "recorded_metadata": {
+        "best_epoch": 4,
+        "selection_metric": "valid ndcg@10",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0001,
+          "weight_decay": 0.0001,
+          "epochs": 20,
+          "patience": 3,
+          "seed": 42,
+          "normalize_valid": true
+        },
+        "source_checkpoint": "checkpoints/genrec_content_best.pt"
+      },
+      "recorded_epoch_rows": 6
+    },
+    {
+      "path": "artifacts/genrec_experiments/original_valid8192.json",
+      "sha256": "01ecf526c160b7bf9c46c3a452c3d5bae7dd841fc1745b67481f0f4d52d0bb28",
+      "bytes": 156170,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_best.pt",
+        "checkpoint_epoch": 20,
+        "split": "valid",
+        "num_users": 8192,
+        "beam_size": 200,
+        "batch_size": 128,
+        "normalize_valid": false
+      }
+    },
+    {
+      "path": "artifacts/genrec_experiments/recommend_smoke_settings.json",
+      "sha256": "291245b2e4f648277e9721b890aa1ab435f35a30fdad303115d28cd397b4a71d",
+      "bytes": 372,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_improved_best.pt",
+        "checkpoint_sha256": "235a889b22761d29d6b1baeb22931e538e0c2c2f110f6512583ef95a73ad3e2e",
+        "beam_size": 200,
+        "selection_metric": "valid ndcg@10"
+      }
+    },
+    {
+      "path": "artifacts/genrec_experiments/recommendations.json",
+      "sha256": "e0f8cea2581548d56d3c38c259f18b7bd3eda2ffc42e3a6d69a6df5c532b952a",
+      "bytes": 14743
+    },
+    {
+      "path": "artifacts/genrec_experiments/retrieval_tuning.json",
+      "sha256": "2be2f0b259e154700d441c2572e3f400c8547c3afb9205f5693ceb75e9abf4e3",
+      "bytes": 91252,
+      "recorded_metadata": {
+        "settings": {
+          "checkpoint": "checkpoints/genrec_improved_best.pt",
+          "checkpoint_sha256": "235a889b22761d29d6b1baeb22931e538e0c2c2f110f6512583ef95a73ad3e2e",
+          "memory": "checkpoints/genrec_collaborative.npz",
+          "beam_size": 200,
+          "neighbor_k": 100,
+          "prior_weight": 4.0,
+          "selection_metric": "valid ndcg@10"
+        }
+      }
+    },
+    {
+      "path": "artifacts/genrec_rq4_a_C_test_prefix_survival_metrics.json",
+      "sha256": "73536356071fac8cc8404789d9f0238dbfb604fb9d23e465f36b61f239dfb208",
+      "bytes": 3835,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_rq4_a_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "rq4_a",
+        "split": "test",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 64,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      }
+    },
+    {
+      "path": "artifacts/genrec_rq4_b_C_test_prefix_survival_metrics.json",
+      "sha256": "b5f57114dc313c4999aa76b8654e68b2ac3e7fd98fa4e06fed7fa954e4c514c7",
+      "bytes": 3748,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_rq4_b_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "rq4_b",
+        "split": "test",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 256,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      }
+    },
+    {
+      "path": "artifacts/genrec_rq4_c_C_test_prefix_survival_metrics.json",
+      "sha256": "6668df0dbc94e1776bcedc4a27017439f49819c3a888d6d52e31d4d4f968d1ce",
+      "bytes": 3756,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_rq4_c_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "rq4_c",
+        "split": "test",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 64,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      }
+    },
+    {
+      "path": "artifacts/genrec_smoke.json",
+      "sha256": "995fb7ee1aa2428dc894e0d2695936e0a520e0d9b84b44b0783c0668ba5ed8a1",
+      "bytes": 213582,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_best.pt",
+        "checkpoint_epoch": 20,
+        "split": "valid",
+        "num_users": 10,
+        "beam_size": 200
+      }
+    },
+    {
+      "path": "artifacts/genrec_test_limit10000_metrics.json",
+      "sha256": "4105b77ee708bddf8d3b3ed2d698acac8720d37ad187ce6c4ff2ee93d212c038",
+      "bytes": 1663,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_best.pt",
+        "checkpoint_epoch": 50,
+        "split": "test",
+        "num_users": 10000,
+        "beam_size": 100,
+        "batch_size": 64
+      }
+    },
+    {
+      "path": "artifacts/genrec_test_limit1024_metrics.json",
+      "sha256": "7019988ef9fef062bce3fab0e8a849319761ae07f3d12bb659f004368ff58ad5",
+      "bytes": 1594,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_best.pt",
+        "checkpoint_epoch": 50,
+        "split": "test",
+        "num_users": 1024,
+        "beam_size": 100,
+        "batch_size": 64
+      }
+    },
+    {
+      "path": "artifacts/genrec_test_limit10_metrics.json",
+      "sha256": "72ea15baa49a66690c937f3d3c6532555f74c730c9344aaed5f944b183e2a1e2",
+      "bytes": 1242,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_best.pt",
+        "checkpoint_epoch": 20,
+        "split": "test",
+        "num_users": 10,
+        "beam_size": 200,
+        "batch_size": 4
+      }
+    },
+    {
+      "path": "artifacts/genrec_test_metrics.json",
+      "sha256": "3b94fcedc47afe96c4e7f1ea96a147b1fdd6903ce5ba9ebf8ec5ccf4f1e77d89",
+      "bytes": 1821,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_D_best.pt",
+        "checkpoint_epoch": 50,
+        "split": "test",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 1024
+      }
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_test_metrics.json",
+      "sha256": "9508939d86e5e6e2f5af01c7c821e3ba6cf5ac3863d0c5d319123ea0f618a081",
+      "bytes": 1910,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_twotower_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "twotower",
+        "split": "test",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 1024
+      }
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_test_path_diagnostics.json",
+      "sha256": "40ac6bbcd08a19836fd33bda8aa3e0eecc04b93bfd5e29996eb866dead87c165",
+      "bytes": 18808,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_twotower_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "twotower",
+        "sid_sha256": "7c167c45fde1913888def24be59187fe5e5bfd4fabd9043bf4388fddc5736a8a",
+        "split": "test",
+        "num_users": 80471,
+        "batch_size": 64,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        }
+      }
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_test_path_diagnostics.parquet",
+      "sha256": "739afc9bd1766ce2e0ffcbf63227810ac36a3dddd9c4229e2e33ed432e359b70",
+      "bytes": 6617643
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_test_prefix_survival_metrics.json",
+      "sha256": "b0133f2e44b94c37f17ca82d5b06c96628eba42f817014e9504b30f8fb434434",
+      "bytes": 3929,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_twotower_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "twotower",
+        "split": "test",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 64,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      }
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_test_prefix_survival_trie_normalized_metrics.json",
+      "sha256": "9d80611d1aa10a6ac28633a13c0571c0e0b14472a566cd11595c762e874eb7e1",
+      "bytes": 4130,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_twotower_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "twotower",
+        "sid_sha256": "7c167c45fde1913888def24be59187fe5e5bfd4fabd9043bf4388fddc5736a8a",
+        "split": "test",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 64,
+        "trie_normalize": true,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      }
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_test_prior_alpha0.5.csv",
+      "sha256": "bcac245407b1b92b955864144de67c4b7648738d28973f09df31036f6aca25c0",
+      "bytes": 779
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_test_prior_alpha0.5.json",
+      "sha256": "d0da7a6d1c11adf1f44df799916789a17cfe9461ba7d715cddddbd82a14b4e80",
+      "bytes": 3258,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_twotower_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "twotower",
+        "sid_sha256": "7c167c45fde1913888def24be59187fe5e5bfd4fabd9043bf4388fddc5736a8a",
+        "split": "test",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 64,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "alphas": [
+          0.5
+        ],
+        "model_normalization": "full vocabulary; mask illegal children without renormalizing"
+      }
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_valid_prefix_survival_trie_normalized_metrics.json",
+      "sha256": "bda9620e955c40e4a6dfab060b57bb329642c6b32409baabda82b4e8d93a6748",
+      "bytes": 4132,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_twotower_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "twotower",
+        "sid_sha256": "7c167c45fde1913888def24be59187fe5e5bfd4fabd9043bf4388fddc5736a8a",
+        "split": "valid",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 64,
+        "trie_normalize": true,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      }
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_valid_prior_sweep.csv",
+      "sha256": "83f990c129fe076cfcac4db71cf8a6ece99791e93eabab1f3fca7abd237aef01",
+      "bytes": 6789
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_valid_prior_sweep.json",
+      "sha256": "f3c7bdd2898f99f5b24332543434c762437a1e8ede5f9bca45b7f99f5402c43a",
+      "bytes": 20480,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_twotower_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "twotower",
+        "sid_sha256": "7c167c45fde1913888def24be59187fe5e5bfd4fabd9043bf4388fddc5736a8a",
+        "split": "valid",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 64,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "alphas": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.3,
+          0.5
+        ],
+        "model_normalization": "full vocabulary; mask illegal children without renormalizing"
+      }
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_valid_prior_sweep_levels2.csv",
+      "sha256": "e7496865f22920bed84d918aff3e9544ad1ad45a3459c393f0fa690cde1fd31e",
+      "bytes": 7322
+    },
+    {
+      "path": "artifacts/genrec_twotower_C_valid_prior_sweep_levels2.json",
+      "sha256": "19737e50e697b5e460c159ad877089b03d43ccfef36c29f335c015c16806403d",
+      "bytes": 21030,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_twotower_C_best.pt",
+        "checkpoint_epoch": 49,
+        "sid_source": "twotower",
+        "sid_sha256": "7c167c45fde1913888def24be59187fe5e5bfd4fabd9043bf4388fddc5736a8a",
+        "split": "valid",
+        "num_users": 80471,
+        "beam_size": 100,
+        "batch_size": 64,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "prior_levels": [
+          2
+        ],
+        "alphas": [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.3,
+          0.5
+        ],
+        "model_normalization": "full vocabulary; mask illegal children without renormalizing"
+      }
+    },
+    {
+      "path": "artifacts/genrec_valid_limit10_metrics.json",
+      "sha256": "5ece2f98090499e178c46d311c36c5e20573a42fae015f770044ecb88d95ee59",
+      "bytes": 1070,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_best.pt",
+        "checkpoint_epoch": 20,
+        "split": "valid",
+        "num_users": 10,
+        "beam_size": 200,
+        "batch_size": 4
+      }
+    },
+    {
+      "path": "artifacts/recbole_benchmark/environment.json",
+      "sha256": "2b4c380c5fa67982a4c57af8bc0dea624e2c37cc7ce0cd78a37a228b8dd19513",
+      "bytes": 1118,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "artifacts/recbole_benchmark/improved_genrec_neural_test.json",
+      "sha256": "434895b243672def70557d45d12bc0d760eaa1a1e91f74c11acb23795335913c",
+      "bytes": 191060,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_best.pt",
+        "checkpoint_sha256": "8baed1bf6c83e8a1aac1e6e743867bd4d0bec0f568675f446255cd333c51cc4d",
+        "checkpoint_epoch": 10,
+        "split": "test",
+        "num_users": 10000,
+        "data_fingerprints": {
+          "item_mapping.parquet": "9e5c0cc821ae8d45abad095c7aa9443fae49cc9bf64770093d9e1744fb24082c",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250"
+        },
+        "training_config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0001,
+          "weight_decay": 0.0001,
+          "epochs": 10,
+          "patience": 3,
+          "seed": 42,
+          "normalize_valid": true,
+          "content_features": false,
+          "sampling": "recent"
+        }
+      }
+    },
+    {
+      "path": "artifacts/recbole_benchmark/improved_genrec_test.json",
+      "sha256": "f7942c39249e6b8fb278f894bd3014b9a32ac558c7d19c506394650cf6e36a05",
+      "bytes": 191115,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_best.pt",
+        "checkpoint_sha256": "8baed1bf6c83e8a1aac1e6e743867bd4d0bec0f568675f446255cd333c51cc4d",
+        "checkpoint_epoch": 10,
+        "split": "test",
+        "num_users": 10000,
+        "data_fingerprints": {
+          "item_mapping.parquet": "9e5c0cc821ae8d45abad095c7aa9443fae49cc9bf64770093d9e1744fb24082c",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250"
+        },
+        "training_config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0001,
+          "weight_decay": 0.0001,
+          "epochs": 10,
+          "patience": 3,
+          "seed": 42,
+          "normalize_valid": true,
+          "content_features": false,
+          "sampling": "recent"
+        }
+      }
+    },
+    {
+      "path": "artifacts/recbole_benchmark/original_genrec_test.json",
+      "sha256": "44477907e8eb5f8ed627436c584b9e33446cf88fb023b5493056a7cc54bdb915",
+      "bytes": 1519022,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_content_best.pt",
+        "checkpoint_sha256": "03912082540800ba8f88d041c98681a94832c834a2d21e3fcf1b467a89cc52f4",
+        "checkpoint_epoch": 20,
+        "split": "test",
+        "num_users": 80471,
+        "data_fingerprints": {
+          "item_mapping.parquet": "9e5c0cc821ae8d45abad095c7aa9443fae49cc9bf64770093d9e1744fb24082c",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250"
+        },
+        "training_config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 20,
+          "patience": 3,
+          "seed": 42
+        }
+      }
+    },
+    {
+      "path": "artifacts/recbole_benchmark/original_sasrec_test.json",
+      "sha256": "65f81fafcc1b1d54fe91e02860ffbfa0d555f6fedba53a1b661aaa78e0ce9ecb",
+      "bytes": 1519220,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/sasrec_best.pt",
+        "checkpoint_sha256": "bd6c890f8c7214b8c7cdbe48ed7eb4efdf56259bf8b1dda7afab4c318cb38f1d",
+        "checkpoint_epoch": 4,
+        "split": "test",
+        "num_users": 80471,
+        "data_fingerprints": {
+          "item_mapping.parquet": "9e5c0cc821ae8d45abad095c7aa9443fae49cc9bf64770093d9e1744fb24082c",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250"
+        },
+        "training_config": {
+          "max_len": 50,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 3,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      }
+    },
+    {
+      "path": "artifacts/recbole_benchmark/recbole_sasrec_test.json",
+      "sha256": "254cbe10b8bebb85c0cc033fbbab17bf6db0ad97faa70675cc561ff64e8d2e44",
+      "bytes": 1518962,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/recbole_sasrec_best.pt",
+        "checkpoint_sha256": "bf58ec1217f131fedacd660638f5c89561a65eb12b97fe8261b56e6f08c5a1e8",
+        "checkpoint_epoch": 3,
+        "split": "test",
+        "num_users": 80471,
+        "data_fingerprints": {
+          "item_mapping.parquet": "9e5c0cc821ae8d45abad095c7aa9443fae49cc9bf64770093d9e1744fb24082c",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250"
+        },
+        "training_config": {
+          "max_len": 50,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 3,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes",
+          "loss": "RecBole CE (all catalog items)"
+        }
+      }
+    },
+    {
+      "path": "artifacts/recbole_benchmark/smoke/original_sasrec_valid.json",
+      "sha256": "29c05cb319575df69f5a1678a3a68834fcc4aed62909b74bf55bf67f029577ef",
+      "bytes": 4729,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/sasrec_best.pt",
+        "checkpoint_sha256": "bd6c890f8c7214b8c7cdbe48ed7eb4efdf56259bf8b1dda7afab4c318cb38f1d",
+        "checkpoint_epoch": 4,
+        "split": "valid",
+        "num_users": 128,
+        "data_fingerprints": {
+          "item_mapping.parquet": "9e5c0cc821ae8d45abad095c7aa9443fae49cc9bf64770093d9e1744fb24082c",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250"
+        },
+        "training_config": {
+          "max_len": 50,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 3,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      }
+    },
+    {
+      "path": "artifacts/recbole_benchmark/training.json",
+      "sha256": "d7be1fed32f1458916d591dc15d7a5189bac0332c6ed13bba4c5481be3d9e9b0",
+      "bytes": 888980,
+      "recorded_metadata": {
+        "best_epoch": 4,
+        "selection_metric": "valid warm recall@20",
+        "num_train_examples": 574699,
+        "data_fingerprints": {
+          "item_mapping.parquet": "9e5c0cc821ae8d45abad095c7aa9443fae49cc9bf64770093d9e1744fb24082c",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 3,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes",
+          "loss": "RecBole CE (all catalog items)"
+        }
+      },
+      "recorded_epoch_rows": 7
+    },
+    {
+      "path": "benchmarks/amazon-beauty/artifacts/genrec_C_smoke_best_test_limit10_metrics.json",
+      "sha256": "8851bdd00623cd151056fd6827a36f8a7ca2c8f8a0dc765a49ad9701bc5deb67",
+      "bytes": 1473,
+      "recorded_metadata": {
+        "checkpoint": "benchmarks/amazon-beauty/checkpoints/genrec_C_smoke_best.pt",
+        "checkpoint_epoch": 1,
+        "variant": "C",
+        "split": "test",
+        "num_users": 10,
+        "beam_size": 200,
+        "batch_size": 10,
+        "smoke": true,
+        "data_signature": {
+          "catalog.parquet": "e38dd0d284cf9bc239bfec81609de0342bd7d59cdefb7bb45b3b44b447fc0389",
+          "sequences.parquet": "226e39b8b165605f44a1f04cc8d3b9edc3315ff03cba4a35a772ff84e189bf97",
+          "semantic_ids.npy": "f96c4b1e6abd0c692dd64807207e416c50ceec1ee6c897b2b04d224e4c0f39ee"
+        }
+      }
+    },
+    {
+      "path": "benchmarks/amazon-beauty/checkpoints/genrec_C_20260911T111600507090Z_smoke.json",
+      "sha256": "0537a425499f5f7ba3468ca2ff7b4c57888134074a979f7a8b6311086d5b0d50",
+      "bytes": 2063,
+      "recorded_metadata": {
+        "run_id": "20260911T111600507090Z",
+        "started_at": "2026-09-11T11:16:00.507111+00:00",
+        "finished_at": "2026-09-11T11:16:01.024157+00:00",
+        "best_epoch": 1,
+        "best_metric": 4.560033798217773,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 1024,
+        "data_signature": {
+          "catalog.parquet": "e38dd0d284cf9bc239bfec81609de0342bd7d59cdefb7bb45b3b44b447fc0389",
+          "sequences.parquet": "226e39b8b165605f44a1f04cc8d3b9edc3315ff03cba4a35a772ff84e189bf97",
+          "semantic_ids.npy": "f96c4b1e6abd0c692dd64807207e416c50ceec1ee6c897b2b04d224e4c0f39ee"
+        },
+        "config": {
+          "data_dir": "/home/cohle/machine_learning/marketsid/benchmarks/amazon-beauty/data/processed",
+          "checkpoint_dir": "/home/cohle/machine_learning/marketsid/benchmarks/amazon-beauty/checkpoints",
+          "rq_checkpoint": "/home/cohle/machine_learning/marketsid/benchmarks/amazon-beauty/checkpoints/rqvae_best.pt",
+          "variant": "C",
+          "anchor_lambda": 0.01,
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42,
+          "smoke": true,
+          "device": "cuda"
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 1
+    },
+    {
+      "path": "benchmarks/amazon-beauty/checkpoints/rqvae_history.json",
+      "sha256": "a2d1ff54f7a767ce7d53fe55bec34b81ecf0ba6dd6a153828c200c754ec57ce7",
+      "bytes": 5281,
+      "recorded_metadata": {
+        "batch_size": 1024,
+        "config": {
+          "input_dim": 384,
+          "hidden_dim": 256,
+          "latent_dim": 128,
+          "num_codebooks": 3,
+          "codebook_size": 256,
+          "beta": 0.25
+        }
+      },
+      "recorded_epoch_rows": 30
+    },
+    {
+      "path": "benchmarks/amazon-beauty/data/processed/embeddings.json",
+      "sha256": "87b91ff91e0b7cf043e978cab84df0f5eef310584243288e8ef7868df90bea16",
+      "bytes": 239,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "benchmarks/amazon-beauty/data/processed/preprocessing.json",
+      "sha256": "d23b08814d2acdaa27c88dc1229bbe30decc3bf04580241354203d9575b1e2bf",
+      "bytes": 956,
+      "recorded_metadata": {
+        "split": "per-user last two events: validation, test",
+        "num_users": 91292,
+        "num_train_examples": 517021
+      }
+    },
+    {
+      "path": "benchmarks/amazon-industrial-scientific/artifacts/genrec_C_best_test_metrics.json",
+      "sha256": "32bdb3a323e9eb9a8eae284b35ab5edc37681a9b2ef2e9fb9081e3bb5f064591",
+      "bytes": 2222,
+      "recorded_metadata": {
+        "checkpoint": "/home/cohle/machine_learning/marketsid/benchmarks/amazon-industrial-scientific/checkpoints/genrec_C_best.pt",
+        "checkpoint_epoch": 50,
+        "variant": "C",
+        "split": "test",
+        "num_users": 50984,
+        "beam_size": 500,
+        "batch_size": 512,
+        "smoke": false,
+        "data_signature": {
+          "catalog.parquet": "21f24107a915273b1382c4299c14d4a55ab1a2586b6680894712f716cc962601",
+          "sequences.parquet": "30ce046e01f6f80da18e2d1b91267a9e39e0a2ef554c7234e3a6d7fdb45e4799",
+          "semantic_ids.npy": "7fb8ca10f038c41a21818b2f29bd98ec903ad9261fa1bf54dd519ac98debc69f"
+        }
+      }
+    },
+    {
+      "path": "benchmarks/amazon-industrial-scientific/artifacts/genrec_C_best_test_prefix_survival_metrics.json",
+      "sha256": "97961c6346aed1e18c83a2eca813285b51c7609b78140cc3d8470cfe2122c09c",
+      "bytes": 3305,
+      "recorded_metadata": {
+        "checkpoint": "/home/cohle/machine_learning/marketsid/benchmarks/amazon-industrial-scientific/checkpoints/genrec_C_best.pt",
+        "checkpoint_epoch": 50,
+        "variant": "C",
+        "split": "test",
+        "num_users": 50984,
+        "beam_size": 100,
+        "batch_size": 64,
+        "smoke": false,
+        "data_signature": {
+          "catalog.parquet": "21f24107a915273b1382c4299c14d4a55ab1a2586b6680894712f716cc962601",
+          "sequences.parquet": "30ce046e01f6f80da18e2d1b91267a9e39e0a2ef554c7234e3a6d7fdb45e4799",
+          "semantic_ids.npy": "7fb8ca10f038c41a21818b2f29bd98ec903ad9261fa1bf54dd519ac98debc69f"
+        }
+      }
+    },
+    {
+      "path": "benchmarks/amazon-industrial-scientific/checkpoints/genrec_C_20260911T112342407038Z.json",
+      "sha256": "0af486aefed8764386998b420ca2f3f0d4bea2d43aa03fcb1c6e5d3f8fc54b4f",
+      "bytes": 29517,
+      "recorded_metadata": {
+        "run_id": "20260911T112342407038Z",
+        "started_at": "2026-09-11T11:23:42.407060+00:00",
+        "finished_at": "2026-09-11T11:35:50.644250+00:00",
+        "best_epoch": 50,
+        "best_metric": 2.4194632043049884,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 259791,
+        "data_signature": {
+          "catalog.parquet": "21f24107a915273b1382c4299c14d4a55ab1a2586b6680894712f716cc962601",
+          "sequences.parquet": "30ce046e01f6f80da18e2d1b91267a9e39e0a2ef554c7234e3a6d7fdb45e4799",
+          "semantic_ids.npy": "7fb8ca10f038c41a21818b2f29bd98ec903ad9261fa1bf54dd519ac98debc69f"
+        },
+        "config": {
+          "data_dir": "/home/cohle/machine_learning/marketsid/benchmarks/amazon-industrial-scientific/data/processed",
+          "checkpoint_dir": "/home/cohle/machine_learning/marketsid/benchmarks/amazon-industrial-scientific/checkpoints",
+          "rq_checkpoint": "/home/cohle/machine_learning/marketsid/benchmarks/amazon-industrial-scientific/checkpoints/rqvae_best.pt",
+          "variant": "C",
+          "anchor_lambda": 0.01,
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42,
+          "smoke": false,
+          "device": "cuda"
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 50
+    },
+    {
+      "path": "benchmarks/amazon-industrial-scientific/checkpoints/rqvae_history.json",
+      "sha256": "98658b159b07d98e2e8fb5e5bea0f3a814713d5dcb9583e91cbc0922f24a9712",
+      "bytes": 5296,
+      "recorded_metadata": {
+        "batch_size": 1024,
+        "config": {
+          "input_dim": 384,
+          "hidden_dim": 256,
+          "latent_dim": 128,
+          "num_codebooks": 3,
+          "codebook_size": 256,
+          "beta": 0.25
+        }
+      },
+      "recorded_epoch_rows": 30
+    },
+    {
+      "path": "benchmarks/amazon-industrial-scientific/data/processed/embeddings.json",
+      "sha256": "0b9e79665865598ac347f64f5870d1dd04a453b6ee9dc0654ba7d451a7239fa0",
+      "bytes": 239,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "benchmarks/amazon-industrial-scientific/data/processed/preprocessing.json",
+      "sha256": "69e1907258871ea883838869256885b5b935b695b8b0dd5558754b551e57017e",
+      "bytes": 956,
+      "recorded_metadata": {
+        "split": "per-user last two events: validation, test",
+        "num_users": 50984,
+        "num_train_examples": 259791
+      }
+    },
+    {
+      "path": "benchmarks/amazon-industrial-scientific/data/processed/semantic_ids.npy",
+      "sha256": "7fb8ca10f038c41a21818b2f29bd98ec903ad9261fa1bf54dd519ac98debc69f",
+      "bytes": 827264
+    },
+    {
+      "path": "benchmarks/movielens-1m/artifacts/genrec_A_best_test_metrics.json",
+      "sha256": "10350c35cf2a8626ef0d252f940ee3466ebc4e3342c0c0e11371d3731ff37736",
+      "bytes": 2134,
+      "recorded_metadata": {
+        "checkpoint": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/checkpoints/genrec_A_best.pt",
+        "checkpoint_epoch": 12,
+        "variant": "A",
+        "split": "test",
+        "num_users": 6040,
+        "beam_size": 100,
+        "batch_size": 64,
+        "smoke": false,
+        "data_signature": {
+          "catalog.parquet": "ec9342984092fd83b57ec8de7e05b6966c2fc9e3c68662c9de99ddc9391cdfc8",
+          "sequences.parquet": "d4947400cef6e6a3830851726625dbdfa32cb7971ee7cc8ed344b6c3f7c45071",
+          "semantic_ids.npy": "16c36612963bffb0e31c9db161b919be35084944026526fdbbe07ef6aa931844"
+        }
+      }
+    },
+    {
+      "path": "benchmarks/movielens-1m/artifacts/genrec_B_smoke_best_test_limit10_metrics.json",
+      "sha256": "1a14e8250b3028ee773eeeb127f3656b35073ea59021cd7956a798192c558716",
+      "bytes": 1131,
+      "recorded_metadata": {
+        "checkpoint": "benchmarks/movielens-1m/checkpoints/genrec_B_smoke_best.pt",
+        "checkpoint_epoch": 1,
+        "variant": "B",
+        "split": "test",
+        "num_users": 10,
+        "beam_size": 200,
+        "batch_size": 10,
+        "smoke": true,
+        "data_signature": {
+          "catalog.parquet": "ec9342984092fd83b57ec8de7e05b6966c2fc9e3c68662c9de99ddc9391cdfc8",
+          "sequences.parquet": "d4947400cef6e6a3830851726625dbdfa32cb7971ee7cc8ed344b6c3f7c45071",
+          "semantic_ids.npy": "16c36612963bffb0e31c9db161b919be35084944026526fdbbe07ef6aa931844"
+        }
+      }
+    },
+    {
+      "path": "benchmarks/movielens-1m/artifacts/genrec_D_smoke_best_valid_limit10_metrics.json",
+      "sha256": "57c366801a158956bc2c08a405d188a67c3d8a359f7d98a6d20594d72df3f6dc",
+      "bytes": 1131,
+      "recorded_metadata": {
+        "checkpoint": "benchmarks/movielens-1m/checkpoints/genrec_D_smoke_best.pt",
+        "checkpoint_epoch": 1,
+        "variant": "D",
+        "split": "valid",
+        "num_users": 10,
+        "beam_size": 200,
+        "batch_size": 10,
+        "smoke": true,
+        "data_signature": {
+          "catalog.parquet": "ec9342984092fd83b57ec8de7e05b6966c2fc9e3c68662c9de99ddc9391cdfc8",
+          "sequences.parquet": "d4947400cef6e6a3830851726625dbdfa32cb7971ee7cc8ed344b6c3f7c45071",
+          "semantic_ids.npy": "16c36612963bffb0e31c9db161b919be35084944026526fdbbe07ef6aa931844"
+        }
+      }
+    },
+    {
+      "path": "benchmarks/movielens-1m/checkpoints/genrec_A_20260910T123825489549Z.json",
+      "sha256": "731d076dc07c0d98146e9ae785fcb3931210aa98ec56ac3bde4d4939c4881493",
+      "bytes": 29430,
+      "recorded_metadata": {
+        "run_id": "20260910T123825489549Z",
+        "started_at": "2026-09-10T12:38:25.489570+00:00",
+        "finished_at": "2026-09-10T13:20:21.786507+00:00",
+        "best_epoch": 49,
+        "best_metric": 1.4896287008626572,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 982089,
+        "data_signature": {
+          "catalog.parquet": "ec9342984092fd83b57ec8de7e05b6966c2fc9e3c68662c9de99ddc9391cdfc8",
+          "sequences.parquet": "d4947400cef6e6a3830851726625dbdfa32cb7971ee7cc8ed344b6c3f7c45071",
+          "semantic_ids.npy": "16c36612963bffb0e31c9db161b919be35084944026526fdbbe07ef6aa931844"
+        },
+        "config": {
+          "data_dir": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/data/processed",
+          "checkpoint_dir": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/checkpoints",
+          "rq_checkpoint": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/checkpoints/rqvae_best.pt",
+          "variant": "A",
+          "anchor_lambda": 0.01,
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42,
+          "smoke": false,
+          "device": "cuda"
+        },
+        "variant_config": {
+          "embedding_mode": "scratch",
+          "tie_semantic_output": false,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 50
+    },
+    {
+      "path": "benchmarks/movielens-1m/checkpoints/genrec_A_20260910T144237773152Z.json",
+      "sha256": "69bb6060b4e022d620ae89bf14b5defd654d4d224713d0a09f01baae9e582dd8",
+      "bytes": 8747,
+      "recorded_metadata": {
+        "run_id": "20260910T144237773152Z",
+        "started_at": "2026-09-10T14:42:37.773172+00:00",
+        "best_epoch": 12,
+        "best_metric": 1.4626421615777425,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 982089,
+        "data_signature": {
+          "catalog.parquet": "ec9342984092fd83b57ec8de7e05b6966c2fc9e3c68662c9de99ddc9391cdfc8",
+          "sequences.parquet": "d4947400cef6e6a3830851726625dbdfa32cb7971ee7cc8ed344b6c3f7c45071",
+          "semantic_ids.npy": "16c36612963bffb0e31c9db161b919be35084944026526fdbbe07ef6aa931844"
+        },
+        "config": {
+          "data_dir": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/data/processed",
+          "checkpoint_dir": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/checkpoints",
+          "rq_checkpoint": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/checkpoints/rqvae_best.pt",
+          "variant": "A",
+          "anchor_lambda": 0.01,
+          "max_len": 50,
+          "d_model": 256,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 3,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42,
+          "smoke": false,
+          "device": "cuda"
+        },
+        "variant_config": {
+          "embedding_mode": "scratch",
+          "tie_semantic_output": false,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 13
+    },
+    {
+      "path": "benchmarks/movielens-1m/checkpoints/genrec_B_20260910T121600127023Z_smoke.json",
+      "sha256": "873b65be34e21dd8f6bdb3aa0537435e1f4157cc81388583a4895ff4d64badb1",
+      "bytes": 2056,
+      "recorded_metadata": {
+        "run_id": "20260910T121600127023Z",
+        "started_at": "2026-09-10T12:16:00.127045+00:00",
+        "finished_at": "2026-09-10T12:16:00.557365+00:00",
+        "best_epoch": 1,
+        "best_metric": 4.39317512512207,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 1024,
+        "data_signature": {
+          "catalog.parquet": "ec9342984092fd83b57ec8de7e05b6966c2fc9e3c68662c9de99ddc9391cdfc8",
+          "sequences.parquet": "d4947400cef6e6a3830851726625dbdfa32cb7971ee7cc8ed344b6c3f7c45071",
+          "semantic_ids.npy": "16c36612963bffb0e31c9db161b919be35084944026526fdbbe07ef6aa931844"
+        },
+        "config": {
+          "data_dir": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/data/processed",
+          "checkpoint_dir": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/checkpoints",
+          "rq_checkpoint": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/checkpoints/rqvae_best.pt",
+          "variant": "B",
+          "anchor_lambda": 0.01,
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 512,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42,
+          "smoke": true,
+          "device": "cuda"
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": false,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 1
+    },
+    {
+      "path": "benchmarks/movielens-1m/checkpoints/genrec_D_20260910T121620507182Z_smoke.json",
+      "sha256": "59332ade79379a628d907944fc27563fc250f49ab76e9c05e977890e545d5246",
+      "bytes": 2168,
+      "recorded_metadata": {
+        "run_id": "20260910T121620507182Z",
+        "started_at": "2026-09-10T12:16:20.507203+00:00",
+        "finished_at": "2026-09-10T12:16:20.934110+00:00",
+        "best_epoch": 1,
+        "best_metric": 3.6204445362091064,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 1024,
+        "data_signature": {
+          "catalog.parquet": "ec9342984092fd83b57ec8de7e05b6966c2fc9e3c68662c9de99ddc9391cdfc8",
+          "sequences.parquet": "d4947400cef6e6a3830851726625dbdfa32cb7971ee7cc8ed344b6c3f7c45071",
+          "semantic_ids.npy": "16c36612963bffb0e31c9db161b919be35084944026526fdbbe07ef6aa931844"
+        },
+        "config": {
+          "data_dir": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/data/processed",
+          "checkpoint_dir": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/checkpoints",
+          "rq_checkpoint": "/home/cohle/machine_learning/marketsid/benchmarks/movielens-1m/checkpoints/rqvae_best.pt",
+          "variant": "D",
+          "anchor_lambda": 0.01,
+          "max_len": 5,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 1,
+          "n_decoder_layers": 1,
+          "dropout": 0.2,
+          "batch_size": 32,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42,
+          "smoke": true,
+          "device": "cpu"
+        },
+        "variant_config": {
+          "embedding_mode": "rq_anchor",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.01
+        }
+      },
+      "recorded_epoch_rows": 1
+    },
+    {
+      "path": "benchmarks/movielens-1m/checkpoints/rqvae_history.json",
+      "sha256": "990ff227a6ca706f7aa0d9379e63bfdf8c1227a8f52c817351bf25f65b2d023c",
+      "bytes": 5289,
+      "recorded_metadata": {
+        "batch_size": 256,
+        "config": {
+          "input_dim": 384,
+          "hidden_dim": 256,
+          "latent_dim": 128,
+          "num_codebooks": 3,
+          "codebook_size": 256,
+          "beta": 0.25
+        }
+      },
+      "recorded_epoch_rows": 30
+    },
+    {
+      "path": "benchmarks/movielens-1m/data/processed/embeddings.json",
+      "sha256": "a9803a58420549c9aec234a25062b7b3fa8346762f8f991df1f5bd5b6eddbf66",
+      "bytes": 239,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "benchmarks/movielens-1m/data/processed/preprocessing.json",
+      "sha256": "7cc05fe05ad495cdd090fa3db79f756fb4718c8eaa5a5c3a7abd70a93fece80c",
+      "bytes": 383,
+      "recorded_metadata": {
+        "split": "per-user last two events: validation, test",
+        "num_users": 6040,
+        "num_train_examples": 982089
+      }
+    },
+    {
+      "path": "checkpoints/genrec_collaborative.json",
+      "sha256": "a35a0842b04e59fc5d7d88bce4d2ac1f395fd82b8fd4400eaf4c73b0c5fa93b4",
+      "bytes": 309,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "checkpoints/genrec_directional.json",
+      "sha256": "b69088d6d0a8675ae93b2af149ac27b8f1e9c34efb0c9539c23913e5d6c9e495",
+      "bytes": 309,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "checkpoints/genrec_directional_retrieval.json",
+      "sha256": "8d03353cc28973465e06fcf9ec09dacc8e0a631adebcc471383c8fc25aad92b8",
+      "bytes": 302,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_improved_best.pt",
+        "checkpoint_sha256": "235a889b22761d29d6b1baeb22931e538e0c2c2f110f6512583ef95a73ad3e2e",
+        "beam_size": 200,
+        "selection_metric": "valid ndcg@10"
+      }
+    },
+    {
+      "path": "checkpoints/genrec_history_20260910T104914648026Z.json",
+      "sha256": "f94cdbf7ecb2b91b37cb81e7e4188534811b4b0539208bffda8cdc7d47f52281",
+      "bytes": 643,
+      "recorded_metadata": {
+        "run_id": "20260910T104914648026Z",
+        "started_at": "2026-09-10T10:49:14.648026+00:00",
+        "num_users": 80471,
+        "best_epoch": null,
+        "best_metric": null,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 0
+    },
+    {
+      "path": "checkpoints/genrec_history_20260910T105126196082Z.json",
+      "sha256": "8f8556937be7b0623a99ac6d2199bd7e12c6c8847dcaf6c6368e49404955f9d6",
+      "bytes": 20314,
+      "recorded_metadata": {
+        "run_id": "20260910T105126196082Z",
+        "started_at": "2026-09-10T10:51:26.196082+00:00",
+        "finished_at": "2026-09-10T11:15:10.199282+00:00",
+        "num_users": 80471,
+        "best_epoch": 50,
+        "best_metric": 3.093481972085686,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 50
+    },
+    {
+      "path": "checkpoints/genrec_history_20260910T111608377230Z.json",
+      "sha256": "8beadc9610f305bbcb3ea2c15bf58b1aca5cf150910997543313f52e4fad07d9",
+      "bytes": 20338,
+      "recorded_metadata": {
+        "run_id": "20260910T111608377230Z",
+        "started_at": "2026-09-10T11:16:08.377230+00:00",
+        "finished_at": "2026-09-10T11:41:11.570649+00:00",
+        "num_users": 80471,
+        "best_epoch": 50,
+        "best_metric": 3.1298737938182377,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 50
+    },
+    {
+      "path": "checkpoints/genrec_history_20260910T114901077335Z.json",
+      "sha256": "cf437c8e01c55a1e97cec7419a33fe3753f3e0275af002a107ab66d39ac65cd6",
+      "bytes": 20321,
+      "recorded_metadata": {
+        "run_id": "20260910T114901077335Z",
+        "started_at": "2026-09-10T11:49:01.077335+00:00",
+        "finished_at": "2026-09-10T12:12:51.787740+00:00",
+        "num_users": 80471,
+        "best_epoch": 50,
+        "best_metric": 3.177091621958253,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 50
+    },
+    {
+      "path": "checkpoints/genrec_retrieval.json",
+      "sha256": "6beb61abc3bd7899724d8a2dd54da07cf41edb97d460441f6e741a542106c7bb",
+      "bytes": 382,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/genrec_best.pt",
+        "checkpoint_sha256": "8baed1bf6c83e8a1aac1e6e743867bd4d0bec0f568675f446255cd333c51cc4d",
+        "beam_size": 200,
+        "selection_metric": "valid ndcg@10"
+      }
+    },
+    {
+      "path": "checkpoints/genrec_rq4_a_C_history_20260911T164226946673Z.json",
+      "sha256": "a758bd76d590e7d18817c0adf7e795fdb25cab71262150784ca01447d3955d49",
+      "bytes": 2066,
+      "recorded_metadata": {
+        "run_id": "20260911T164226946673Z",
+        "started_at": "2026-09-11T16:42:26.946673+00:00",
+        "sid_source": "rq4_a",
+        "variant": "C",
+        "num_users": 80471,
+        "best_epoch": 2,
+        "best_metric": 4.742455738799697,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 2
+    },
+    {
+      "path": "checkpoints/genrec_rq4_a_C_history_20260911T164332673889Z.json",
+      "sha256": "066d00a4fc25d3aad2c7b21a1279eabfec1712d6baa6de1323a5a44d55320418",
+      "bytes": 20915,
+      "recorded_metadata": {
+        "run_id": "20260911T164332673889Z",
+        "started_at": "2026-09-11T16:43:32.673889+00:00",
+        "finished_at": "2026-09-11T17:11:40.396257+00:00",
+        "sid_source": "rq4_a",
+        "variant": "C",
+        "num_users": 80471,
+        "best_epoch": 49,
+        "best_metric": 3.97721842407204,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 50
+    },
+    {
+      "path": "checkpoints/genrec_rq4_b_C_history_20260911T173519212678Z.json",
+      "sha256": "a9be3d0960652250540653dae5336c770eda97242c493609879e8cf2fc950997",
+      "bytes": 1354,
+      "recorded_metadata": {
+        "run_id": "20260911T173519212678Z",
+        "started_at": "2026-09-11T17:35:19.212678+00:00",
+        "sid_source": "rq4_b",
+        "sid_sha256": "ca1f6e13e4cd2ce8552216e5c6b910f76b7a7565b40af255b329f0b51c107962",
+        "variant": "C",
+        "num_users": 80471,
+        "best_epoch": null,
+        "best_metric": null,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 0
+    },
+    {
+      "path": "checkpoints/genrec_rq4_b_C_history_20260911T173526794558Z.json",
+      "sha256": "bb6944db728105d0c4d2a8b0f63eb907f617a28bf423704a8dbe4f072051167e",
+      "bytes": 21040,
+      "recorded_metadata": {
+        "run_id": "20260911T173526794558Z",
+        "started_at": "2026-09-11T17:35:26.794558+00:00",
+        "finished_at": "2026-09-11T18:06:15.824403+00:00",
+        "sid_source": "rq4_b",
+        "sid_sha256": "ca1f6e13e4cd2ce8552216e5c6b910f76b7a7565b40af255b329f0b51c107962",
+        "variant": "C",
+        "num_users": 80471,
+        "best_epoch": 49,
+        "best_metric": 3.6883985754601283,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 50
+    },
+    {
+      "path": "checkpoints/genrec_rq4_c_C_history_20260914T184942871150Z.json",
+      "sha256": "5591d8cf244cc2c4dd5fdb2e17564e4ce1761b2a23a12021ac2dc2445dce9780",
+      "bytes": 21048,
+      "recorded_metadata": {
+        "run_id": "20260914T184942871150Z",
+        "started_at": "2026-09-14T18:49:42.871150+00:00",
+        "finished_at": "2026-09-14T19:18:32.233375+00:00",
+        "sid_source": "rq4_c",
+        "sid_sha256": "2c396e4974a4d8da48c86d89ec56ce76c479526f940584b5b61027e0c934ac66",
+        "variant": "C",
+        "num_users": 80471,
+        "best_epoch": 49,
+        "best_metric": 3.7454896795705372,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 50
+    },
+    {
+      "path": "checkpoints/genrec_twotower_C_history_20260911T101813689532Z.json",
+      "sha256": "4d142a213194d227e5272e6d7c6de1978a135e7b1eaab347ea8d63304ae3949d",
+      "bytes": 20603,
+      "recorded_metadata": {
+        "run_id": "20260911T101813689532Z",
+        "started_at": "2026-09-11T10:18:13.689532+00:00",
+        "finished_at": "2026-09-11T10:41:58.351734+00:00",
+        "sid_source": "twotower",
+        "variant": "C",
+        "num_users": 80471,
+        "best_epoch": 49,
+        "best_metric": 3.2115258909510533,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 50
+    },
+    {
+      "path": "checkpoints/genrec_twotower_C_history_20260911T164004529237Z.json",
+      "sha256": "2471dbe6a385d306ad9aa73b902838f8c93646b5f6e04c2b11c611824a76ebee",
+      "bytes": 1680,
+      "recorded_metadata": {
+        "run_id": "20260911T164004529237Z",
+        "started_at": "2026-09-11T16:40:04.529237+00:00",
+        "sid_source": "twotower",
+        "variant": "C",
+        "num_users": 80471,
+        "best_epoch": 1,
+        "best_metric": 3.823675498700966,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 1
+    },
+    {
+      "path": "checkpoints/genrec_twotower_C_history_20260911T164117131923Z.json",
+      "sha256": "cd5c519ba47388eceba262eef5f31cd26b3d141f7070edfb5e55aa770f025d16",
+      "bytes": 1682,
+      "recorded_metadata": {
+        "run_id": "20260911T164117131923Z",
+        "started_at": "2026-09-11T16:41:17.131923+00:00",
+        "sid_source": "twotower",
+        "variant": "C",
+        "num_users": 80471,
+        "best_epoch": 1,
+        "best_metric": 3.8236755719114774,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 1
+    },
+    {
+      "path": "checkpoints/genrec_twotower_C_history_20260912T181732358751Z.json",
+      "sha256": "b64c9236d1d12fab333f43d521f8206a31a51997126724cf782f2035baca2596",
+      "bytes": 21031,
+      "recorded_metadata": {
+        "run_id": "20260912T181732358751Z",
+        "started_at": "2026-09-12T18:17:32.358751+00:00",
+        "finished_at": "2026-09-12T18:48:50.023234+00:00",
+        "sid_source": "twotower",
+        "sid_sha256": "7c167c45fde1913888def24be59187fe5e5bfd4fabd9043bf4388fddc5736a8a",
+        "variant": "C",
+        "num_users": 80471,
+        "best_epoch": 49,
+        "best_metric": 3.2116505646542377,
+        "selection_metric": "valid.loss",
+        "num_train_examples": 574699,
+        "data_signature": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "user_sequences.parquet": "0a7e4aef67706e91efcc5ee88b7a1e0677df9f8921036fa376d4b57b654a3250",
+          "interactions_model.parquet": "8a5144c54f2991a707f752f606370b5480c4ea7059d20a5e99261f4eed0a10fa"
+        },
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_encoder_layers": 3,
+          "n_decoder_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 5,
+          "seed": 42
+        },
+        "variant_config": {
+          "embedding_mode": "rq_init",
+          "tie_semantic_output": true,
+          "anchor_lambda": 0.0
+        }
+      },
+      "recorded_epoch_rows": 50
+    },
+    {
+      "path": "checkpoints/rqvae_rq4_a_export.json",
+      "sha256": "d92da6154e9f73979f36e8ec03b37863291c1208311a01a46ca2ce40806d8059",
+      "bytes": 545,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "checkpoints/rqvae_rq4_a_history.json",
+      "sha256": "4f2c9306e00cda84e6483c3c673eb14a8ab1cc9714476979c3ab8d860d268413",
+      "bytes": 6392,
+      "recorded_metadata": {
+        "variant": "A",
+        "best_epoch": 30,
+        "selection_metric": "reconstruction_loss",
+        "config": {
+          "input_dim": 128,
+          "hidden_dim": 256,
+          "latent_dim": 128,
+          "num_codebooks": 4,
+          "codebook_size": 256,
+          "beta": 0.25
+        },
+        "settings": {
+          "variant": "A",
+          "epochs": 30,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "behavior_weight": 0.05,
+          "seed": 42,
+          "export_only": false
+        },
+        "input_hashes": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "item_two_tower_embeddings.json": "58c2a087cde943c04001dd940bad65c2d8267baebc49f9dfcb3bc6db86e20762",
+          "item_two_tower_embeddings.npy": "c9eb34b14db5220c4dafe5f529217b2ceb0b9953b7f67e21ce1454a563a591c1"
+        }
+      },
+      "recorded_epoch_rows": 30
+    },
+    {
+      "path": "checkpoints/rqvae_rq4_b_export.json",
+      "sha256": "9d59c570104ed192cde4d371036b4d233a95a236e56b214d878237b84a560297",
+      "bytes": 540,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "checkpoints/rqvae_rq4_b_history.json",
+      "sha256": "8c42b04b7210bde548b8492de1edc72a5d267038a0ebdd1d3adb18710596cca0",
+      "bytes": 6937,
+      "recorded_metadata": {
+        "variant": "B",
+        "best_epoch": 29,
+        "selection_metric": "reconstruction_loss",
+        "config": {
+          "input_dim": 384,
+          "hidden_dim": 256,
+          "latent_dim": 128,
+          "num_codebooks": 4,
+          "codebook_size": 256,
+          "beta": 0.25
+        },
+        "settings": {
+          "variant": "B",
+          "epochs": 30,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "behavior_weight": 0.05,
+          "seed": 42,
+          "export_only": false
+        },
+        "input_hashes": {
+          "item_text_embeddings.npy": "11daa561bded60e689ab133ff5c73db45f89e88d98b70c818747e4aa5fbbbbef",
+          "item_two_tower_embeddings.json": "58c2a087cde943c04001dd940bad65c2d8267baebc49f9dfcb3bc6db86e20762",
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "item_two_tower_embeddings.npy": "c9eb34b14db5220c4dafe5f529217b2ceb0b9953b7f67e21ce1454a563a591c1"
+        }
+      },
+      "recorded_epoch_rows": 30
+    },
+    {
+      "path": "checkpoints/rqvae_rq4_c_export.json",
+      "sha256": "bdb8d8da79b543191d6d8904436fa3c0bee32d109fcd011108a72758ecdb549e",
+      "bytes": 543,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "checkpoints/rqvae_rq4_c_history.json",
+      "sha256": "16496c987fc9bc7cf240c88ed3474aecb52f6c0f6a582aa5cb6a376dc5d19d39",
+      "bytes": 6919,
+      "recorded_metadata": {
+        "variant": "C",
+        "best_epoch": 30,
+        "selection_metric": "reconstruction_loss",
+        "config": {
+          "input_dim": 384,
+          "hidden_dim": 256,
+          "latent_dim": 128,
+          "num_codebooks": 4,
+          "codebook_size": 256,
+          "beta": 0.25
+        },
+        "settings": {
+          "variant": "C",
+          "epochs": 30,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "behavior_weight": 0.05,
+          "seed": 42,
+          "export_only": false
+        },
+        "input_hashes": {
+          "catalog_model.parquet": "37327f0e78f550e438d3bf78795c39519835b7a09dfd4b30264cd8c74dbd837b",
+          "item_text_embeddings.npy": "11daa561bded60e689ab133ff5c73db45f89e88d98b70c818747e4aa5fbbbbef",
+          "item_two_tower_embeddings.npy": "c9eb34b14db5220c4dafe5f529217b2ceb0b9953b7f67e21ce1454a563a591c1",
+          "item_two_tower_embeddings.json": "58c2a087cde943c04001dd940bad65c2d8267baebc49f9dfcb3bc6db86e20762"
+        }
+      },
+      "recorded_epoch_rows": 30
+    },
+    {
+      "path": "checkpoints/sasrec_history_20260908T085159839650Z.json",
+      "sha256": "b4d76ee3e46096d886d4be9c2c3cde3fc6bfeae26fdb92aee17bb0df2fe63041",
+      "bytes": 24831,
+      "recorded_metadata": {
+        "run_id": "20260908T085159839650Z",
+        "started_at": "2026-09-08T08:51:59.839650+00:00",
+        "finished_at": "2026-09-08T08:55:23.519368+00:00",
+        "num_users": 80471,
+        "best_epoch": 9,
+        "best_metric": 0.02776717682822514,
+        "selection_metric": "valid.warm.recall@20",
+        "config": {
+          "max_len": 50,
+          "d_model": 64,
+          "n_heads": 8,
+          "n_layers": 4,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 20,
+          "patience": 3,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 12
+    },
+    {
+      "path": "checkpoints/sasrec_history_20260908T085655994343Z.json",
+      "sha256": "5b5de4810386bcf95a8b4ab16ab4cc861538f6a2933fba830ca4d42913864152",
+      "bytes": 19119,
+      "recorded_metadata": {
+        "run_id": "20260908T085655994343Z",
+        "started_at": "2026-09-08T08:56:55.994343+00:00",
+        "finished_at": "2026-09-08T08:59:48.038919+00:00",
+        "num_users": 80471,
+        "best_epoch": 6,
+        "best_metric": 0.025622129518746133,
+        "selection_metric": "valid.warm.recall@20",
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 8,
+          "n_layers": 4,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 20,
+          "patience": 3,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 9
+    },
+    {
+      "path": "checkpoints/sasrec_history_20260908T090154248919Z.json",
+      "sha256": "c148648a6836bb040344de00b3e5783737ce7ac3f63a3bb2ada223d3944d980b",
+      "bytes": 19143,
+      "recorded_metadata": {
+        "run_id": "20260908T090154248919Z",
+        "started_at": "2026-09-08T09:01:54.248919+00:00",
+        "finished_at": "2026-09-08T09:05:46.892647+00:00",
+        "num_users": 80471,
+        "best_epoch": 6,
+        "best_metric": 0.025332613930963692,
+        "selection_metric": "valid.warm.recall@20",
+        "config": {
+          "max_len": 50,
+          "d_model": 256,
+          "n_heads": 8,
+          "n_layers": 4,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 20,
+          "patience": 3,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 9
+    },
+    {
+      "path": "checkpoints/sasrec_history_20260908T135021287418Z.json",
+      "sha256": "9dd90d6129e166abc092663c0e405681db1b0bb04547e244ebbb498ba91f452b",
+      "bytes": 580,
+      "recorded_metadata": {
+        "run_id": "20260908T135021287418Z",
+        "started_at": "2026-09-08T13:50:21.287418+00:00",
+        "num_users": 80471,
+        "best_epoch": null,
+        "best_metric": null,
+        "selection_metric": "valid.warm.recall@20",
+        "config": {
+          "max_len": 400,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 2048,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 0
+    },
+    {
+      "path": "checkpoints/sasrec_history_20260908T135038969390Z.json",
+      "sha256": "94fe78bcbb1206027b87977e435085712120c3f1200d80587a52601b58e40674",
+      "bytes": 580,
+      "recorded_metadata": {
+        "run_id": "20260908T135038969390Z",
+        "started_at": "2026-09-08T13:50:38.969390+00:00",
+        "num_users": 80471,
+        "best_epoch": null,
+        "best_metric": null,
+        "selection_metric": "valid.warm.recall@20",
+        "config": {
+          "max_len": 400,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 0
+    },
+    {
+      "path": "checkpoints/sasrec_history_20260908T135049322512Z.json",
+      "sha256": "5e2c19b5163eb75a9aaf7e855ba890c640453d8f782aa00bb6733dc70691289f",
+      "bytes": 580,
+      "recorded_metadata": {
+        "run_id": "20260908T135049322512Z",
+        "started_at": "2026-09-08T13:50:49.322512+00:00",
+        "num_users": 80471,
+        "best_epoch": null,
+        "best_metric": null,
+        "selection_metric": "valid.warm.recall@20",
+        "config": {
+          "max_len": 200,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 0
+    },
+    {
+      "path": "checkpoints/sasrec_history_20260908T135250796248Z.json",
+      "sha256": "90e6ff61b3dddf78a9ae13072c267a106c27f05e87d3ffc0b0bbd3efeb85f1ff",
+      "bytes": 579,
+      "recorded_metadata": {
+        "run_id": "20260908T135250796248Z",
+        "started_at": "2026-09-08T13:52:50.796248+00:00",
+        "num_users": 80471,
+        "best_epoch": null,
+        "best_metric": null,
+        "selection_metric": "valid.warm.recall@20",
+        "config": {
+          "max_len": 50,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 0
+    },
+    {
+      "path": "checkpoints/sasrec_history_20260908T143126184389Z.json",
+      "sha256": "e0475cf489d3314393878266e6f4937b0abec51d9572edd023cec3f1a1a209ee",
+      "bytes": 14001,
+      "recorded_metadata": {
+        "run_id": "20260908T143126184389Z",
+        "started_at": "2026-09-08T14:31:26.184389+00:00",
+        "finished_at": "2026-09-08T14:42:29.908131+00:00",
+        "num_users": 80471,
+        "best_epoch": 3,
+        "best_metric": 0.03025437892326521,
+        "selection_metric": "valid.warm.recall@20",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 200,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      },
+      "recorded_epoch_rows": 6
+    },
+    {
+      "path": "checkpoints/sasrec_history_20260908T144322654352Z.json",
+      "sha256": "64025e97facaba3f9702f0e20df9959f64a764ae142c269f6bdf4dd43ffe6971",
+      "bytes": 16019,
+      "recorded_metadata": {
+        "run_id": "20260908T144322654352Z",
+        "started_at": "2026-09-08T14:43:22.654352+00:00",
+        "finished_at": "2026-09-08T14:51:19.280925+00:00",
+        "num_users": 80471,
+        "best_epoch": 4,
+        "best_metric": 0.030688652304938873,
+        "selection_metric": "valid.warm.recall@20",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 3,
+          "dropout": 0.2,
+          "batch_size": 1024,
+          "lr": 0.001,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      },
+      "recorded_epoch_rows": 7
+    },
+    {
+      "path": "checkpoints/two_tower_history_20260908T122822582355Z.json",
+      "sha256": "4cabf8882bcfa90c99a16f15505cfc7216d251ee3740ec75c661fb41752d9cd3",
+      "bytes": 5496,
+      "recorded_metadata": {
+        "run_id": "20260908T122822582355Z",
+        "started_at": "2026-09-08T12:28:22.582355+00:00",
+        "finished_at": "2026-09-08T12:28:23.624135+00:00",
+        "num_users": 80471,
+        "smoke": true,
+        "best_epoch": 1,
+        "best_metric": 0.00205761316872428,
+        "selection_metric": "valid.warm.recall@20",
+        "num_train_examples": 2048,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "temperature": 0.1,
+          "batch_size": 1024,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 1,
+          "patience": 3,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 1
+    },
+    {
+      "path": "checkpoints/two_tower_history_20260908T124156726516Z.json",
+      "sha256": "97dc7c5513d5eaf0e3ac21277f2529961c9defeea24cb035ff3d5e9ac8110d86",
+      "bytes": 44048,
+      "recorded_metadata": {
+        "run_id": "20260908T124156726516Z",
+        "started_at": "2026-09-08T12:41:56.726516+00:00",
+        "finished_at": "2026-09-08T12:48:34.477921+00:00",
+        "num_users": 80471,
+        "smoke": false,
+        "best_epoch": 19,
+        "best_metric": 0.034149679558883525,
+        "selection_metric": "valid.warm.recall@20",
+        "num_train_examples": 160942,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "temperature": 0.1,
+          "batch_size": 1024,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 20,
+          "patience": 3,
+          "seed": 42
+        }
+      },
+      "recorded_epoch_rows": 20
+    },
+    {
+      "path": "checkpoints/two_tower_history_20260908T125021681353Z.json",
+      "sha256": "06b02ec8554a63aa8612051767704f4dba76684c13d992afb5c4161000dc9c24",
+      "bytes": 5128,
+      "recorded_metadata": {
+        "run_id": "20260908T125021681353Z",
+        "started_at": "2026-09-08T12:50:21.681353+00:00",
+        "finished_at": "2026-09-08T12:50:22.738345+00:00",
+        "num_users": 80471,
+        "smoke": true,
+        "best_epoch": 1,
+        "best_metric": 0.00205761316872428,
+        "selection_metric": "valid.warm.recall@20",
+        "num_train_examples": 2048,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "temperature": 0.1,
+          "batch_size": 1024,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 1,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      },
+      "recorded_epoch_rows": 1
+    },
+    {
+      "path": "checkpoints/two_tower_history_20260908T125126375320Z.json",
+      "sha256": "b00f78683eb909bed7ab667ad7308aea4e1d15a8a788600e782f257cf4e8c8fe",
+      "bytes": 4820,
+      "recorded_metadata": {
+        "run_id": "20260908T125126375320Z",
+        "started_at": "2026-09-08T12:51:26.375320+00:00",
+        "num_users": 80471,
+        "smoke": false,
+        "best_epoch": 2,
+        "best_metric": 0.02856992459434918,
+        "selection_metric": "valid.warm.recall@20",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "temperature": 0.1,
+          "batch_size": 1024,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      },
+      "recorded_epoch_rows": 2
+    },
+    {
+      "path": "checkpoints/two_tower_history_20260908T125631038709Z.json",
+      "sha256": "913c91201c9d51eedcb68a253c516d2a1d5852579cce37432e390eefb89be605",
+      "bytes": 65798,
+      "recorded_metadata": {
+        "run_id": "20260908T125631038709Z",
+        "started_at": "2026-09-08T12:56:31.038709+00:00",
+        "finished_at": "2026-09-08T13:09:06.491114+00:00",
+        "num_users": 80471,
+        "smoke": false,
+        "best_epoch": 28,
+        "best_metric": 0.037465949018936955,
+        "selection_metric": "valid.warm.recall@20",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "temperature": 0.1,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      },
+      "recorded_epoch_rows": 31
+    },
+    {
+      "path": "checkpoints/two_tower_history_20260908T131000075748Z.json",
+      "sha256": "1a2a2c2ec6505f4ba51e2b203d2c40c76d16e07a92b88156a9bdfda38363a1c0",
+      "bytes": 14726,
+      "recorded_metadata": {
+        "run_id": "20260908T131000075748Z",
+        "started_at": "2026-09-08T13:10:00.075748+00:00",
+        "num_users": 80471,
+        "smoke": false,
+        "best_epoch": 7,
+        "best_metric": 0.023016489228704154,
+        "selection_metric": "valid.warm.recall@20",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 256,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "temperature": 0.1,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      },
+      "recorded_epoch_rows": 7
+    },
+    {
+      "path": "checkpoints/two_tower_history_20260908T131458161044Z.json",
+      "sha256": "2fa869d8cdcc1ccca4ecf2a54525bcefdfb49847ac29e283d755f819a30d4fde",
+      "bytes": 22285,
+      "recorded_metadata": {
+        "run_id": "20260908T131458161044Z",
+        "started_at": "2026-09-08T13:14:58.161044+00:00",
+        "finished_at": "2026-09-08T13:18:17.157378+00:00",
+        "num_users": 80471,
+        "smoke": false,
+        "best_epoch": 6,
+        "best_metric": 0.03218886944162971,
+        "selection_metric": "valid.warm.recall@20",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 64,
+          "n_heads": 4,
+          "n_layers": 2,
+          "dropout": 0.2,
+          "temperature": 0.1,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      },
+      "recorded_epoch_rows": 9
+    },
+    {
+      "path": "checkpoints/two_tower_history_20260908T131904621494Z.json",
+      "sha256": "d43c3674bfd8623046ac491e9801bc2ffe40070de2b6b81f56d994fd03245e7c",
+      "bytes": 79658,
+      "recorded_metadata": {
+        "run_id": "20260908T131904621494Z",
+        "started_at": "2026-09-08T13:19:04.621494+00:00",
+        "finished_at": "2026-09-08T13:39:00.030650+00:00",
+        "num_users": 80471,
+        "smoke": false,
+        "best_epoch": 35,
+        "best_metric": 0.03455763334166787,
+        "selection_metric": "valid.warm.recall@20",
+        "num_train_examples": 574699,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_layers": 3,
+          "dropout": 0.2,
+          "temperature": 0.1,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      },
+      "recorded_epoch_rows": 38
+    },
+    {
+      "path": "checkpoints/two_tower_metrics.json",
+      "sha256": "8e7b615b6e4aeb83ec3dc6fd0ae5be70bdf01176a333df1746046a2b1e67bcb7",
+      "bytes": 3592,
+      "recorded_metadata": {
+        "best_epoch": 35,
+        "config": {
+          "max_len": 50,
+          "d_model": 128,
+          "n_heads": 4,
+          "n_layers": 3,
+          "dropout": 0.2,
+          "temperature": 0.1,
+          "batch_size": 2048,
+          "lr": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 50,
+          "patience": 3,
+          "seed": 42,
+          "training_strategy": "all_prefixes"
+        }
+      }
+    },
+    {
+      "path": "data/processed/item_semantic_ids_behavior_0p001.npy",
+      "sha256": "8aaf60bf3588ee06b93283f431b021d207f7b8fe91bf8d2b07d7ae8067eb0bd3",
+      "bytes": 1074432
+    },
+    {
+      "path": "data/processed/item_semantic_ids_behavior_0p005.npy",
+      "sha256": "ade2bb8c68ac198d8711b4371989ba994292fef844213be5d30891f3998bc52a",
+      "bytes": 1074432
+    },
+    {
+      "path": "data/processed/item_semantic_ids_behavior_0p01.npy",
+      "sha256": "4dffbe1fb126462f028ff496d7bc4fa201f735c88de835f901c7b3bcca0e923d",
+      "bytes": 1074432
+    },
+    {
+      "path": "data/processed/item_semantic_ids_behavior_0p05.npy",
+      "sha256": "704a663f2a88656bb4d4f0a396a433ad1d8189a8eccb139e31deb66ce68f781e",
+      "bytes": 1074432
+    },
+    {
+      "path": "data/processed/item_semantic_ids_content.npy",
+      "sha256": "e9f1c88e60ad8198081bc2b577515ad7cfba7b96412f02988bbd3f7ec9bd904c",
+      "bytes": 1074432
+    },
+    {
+      "path": "data/processed/item_semantic_ids_rq4_a.json",
+      "sha256": "b0b965d0c0c63c7497095aa6277938a5b02b594f095a57d725cebe7aa73ef60e",
+      "bytes": 829,
+      "recorded_metadata": {
+        "sid_sha256": "11139f3d8962e18274c1e42fc61d893f999b563ae9fbab658bf71181805e6724",
+        "variant": "A"
+      }
+    },
+    {
+      "path": "data/processed/item_semantic_ids_rq4_b.json",
+      "sha256": "266057bf8d5303bd9cfeff79747bbfab6c2002a1ffa21f5c01e5c42853e1ce03",
+      "bytes": 824,
+      "recorded_metadata": {
+        "sid_sha256": "ca1f6e13e4cd2ce8552216e5c6b910f76b7a7565b40af255b329f0b51c107962",
+        "variant": "B"
+      }
+    },
+    {
+      "path": "data/processed/item_semantic_ids_rq4_c.json",
+      "sha256": "eac28618c794de80035d86ad775f81df62853c03cb3bb25f989533ea636dfbff",
+      "bytes": 827,
+      "recorded_metadata": {
+        "sid_sha256": "2c396e4974a4d8da48c86d89ec56ce76c479526f940584b5b61027e0c934ac66",
+        "variant": "C"
+      }
+    },
+    {
+      "path": "data/processed/item_semantic_ids_twotower.npy",
+      "sha256": "7c167c45fde1913888def24be59187fe5e5bfd4fabd9043bf4388fddc5736a8a",
+      "bytes": 2148736
+    },
+    {
+      "path": "data/processed/item_text_embeddings.json",
+      "sha256": "59d1ffaafc47445baf8d0acc613cde4992749f4431657eebedde874eca32b0b8",
+      "bytes": 429,
+      "recorded_metadata": {}
+    },
+    {
+      "path": "data/processed/item_two_tower_embeddings.json",
+      "sha256": "58c2a087cde943c04001dd940bad65c2d8267baebc49f9dfcb3bc6db86e20762",
+      "bytes": 293,
+      "recorded_metadata": {
+        "checkpoint": "checkpoints/two_tower_best.pt",
+        "checkpoint_sha256": "bf3c6626e10d1c0e62595287ed75c69e318135cebaef96ea34fd590744d17fd6",
+        "checkpoint_epoch": 35
+      }
+    }
+  ],
+  "current_source_sha256": {
+    "scripts/analyze_semantic_ids.py": "2b7cdd1e53d3718a87c41f839e2363715550f6aafb491e5d2b2147c40b3c4223",
+    "scripts/build_behaviour_embeddings.py": "ba08ec149500b072cae7a7573771fecf017bef746a6dbaee87eb7d0b7f4efd68",
+    "scripts/compare_sid_locality.py": "aed837b9b823b99d1c6f79a18930f3da664b88ec31340128d9e4a521018119f9",
+    "scripts/diagnose_genrec_paths.py": "c0cf468638e7a04862273faea784773008e5bf05445b0051eb65bd62404ab488",
+    "scripts/encode_items.py": "1bd5d9c7704c4f7baec4d5d793503825e2e4da7e08dab2e87d4cfb17e0df43bb",
+    "scripts/evaluate_genrec.py": "dee56c8ca3379f29221905f380fa2bf6046155caf8c45d284bd42ddb1ee3c97c",
+    "scripts/export_behavior_semantic_ids.py": "9cf2500a23f2fd56e9bbe39b2f1d7da0418030d9d87135f71785b51af90e0b01",
+    "scripts/export_semantic_ids.py": "7d44a5d555d1ff958f3aa5a4ab15c2c040631fabc5096198691464fcedf44e39",
+    "scripts/export_two_tower_embeddings.py": "da1bef470da0473c159325308fe93bf34ef9f42becf28282bd9826bd1dde0da3",
+    "scripts/export_twotower_semantic_ids.py": "1e93b86284bbf1307706b7fd25795bcdecc02530fcff6c351d820532621df884",
+    "scripts/prepare_data.py": "8444577224205ccd695074003c5ff87eb20874509d734b2daca3fab989f12336",
+    "scripts/prepare_metadata.py": "ee83f8f9317a6cd45795d613e4029c1bf63588a780ea7ad150e24ce02bc4a9be",
+    "scripts/prepare_model_data.py": "7d37d50e401bdff607f5fcebf8bcdfab7e9e4ffd07691e413c8ac0d1d275d82a",
+    "scripts/report_sid_ablation.py": "60ff9b85f9088d2e98b00c05f39263e855b9ed678bdee47a9abfa53e259413bc",
+    "scripts/smoke_genrec.py": "c920d242d806d79850c87f05705b76b9d007c47cb9590b4ef870e46fd6947230",
+    "scripts/sweep_genrec_priors.py": "5db8ecbd49d22a173a200c4782636d6948ad14fc567180d4ec0383de9d2550e7",
+    "scripts/train_behavior_rqvae.py": "be4919ce6e3d602c54dede429c3b87d0122ee7090ef5049fb4f08a72ccc58ce9",
+    "scripts/train_genrec.py": "a4d1d1302dbc3cedc5ad4c19ecef51bf245fd9bfe8d96de835e4859dad9d1f44",
+    "scripts/train_rqvae.py": "16c2649bf78d02bca835483be643a0f8fb2bb6d61d919a253dc82ec98760e039",
+    "scripts/train_sasrec.py": "7f18924ce1a71cee2a87d1e141f2d9612ebc57698be26f2e18fd9290942517da",
+    "scripts/train_sid_ablation.py": "86e44cddc64aa70395c2a0165ae4fb0eca880e8d5aa99bd117012c5a35caee30",
+    "scripts/train_two_tower.py": "dec36b3a8733285da8e365b34b988d4af3b3ce06a918b84772f698dcddb34be6",
+    "scripts/train_twotower_rqvae.py": "ab898449eedcf2ccca8cd878a98d3f96b39f65b0c2eea136a7aee5462d5ea8cb",
+    "src/data/amazon_preprocessing.py": "3fd139da2e60610a641a83a217887e956f5aa7cb4433432284f29a3791384069",
+    "src/data/embedding_cache.py": "d93cde28b27e2ff2a445c7d3115ea5fd3e4c5bdf8067fb83f1d64609f0a3b309",
+    "src/data/genrec_dataset.py": "ff6a16efa3627e2c36972b22632d9ff871098a29ffd9c402c9493b81870e2e5b",
+    "src/data/sasrec_dataset.py": "b6a1919aee48620717f5c83ac053b3aec3adcf09420b6bdec28568db5871cb8a",
+    "src/data/two_tower_dataset.py": "9ef0493c9e983a7665b4a34218365aad97babfd50f61561f18991bd8a9e9d8ee",
+    "src/models/baseline_popularity.py": "2908985b3b1e5ad747f14b0af0e609c4d54f782b03ab98d41e13739ff586321f",
+    "src/models/beam_search.py": "fb0f14edfb0fc7bd54b1bfc7b37df97f32745fb197d7387042c14d10286f631d",
+    "src/models/behavior_rqvae.py": "169207b0f27c37619dc8d2f54e76760fb2123c5cc749fa13e57ed54825cba081",
+    "src/models/content_two_tower.py": "47e5cd26981dcc04eccf703c20d7d3d1ba9fd760cc2f561d64f85e6dd3aa4b94",
+    "src/models/distilled_rqvae.py": "9315c171cd35a36588e8ddba97e6a43611cd374ebe088a222100257d3d0d3548",
+    "src/models/generative_recommender.py": "db1a540fa473bd0c3bee9bd3967131a2cc652d47012d3f30aa21c09dff4865af",
+    "src/models/rqvae.py": "6e0fed28b361f56e726874470c367dc3a5d55612fe6ca25772f916f9bbae062d",
+    "src/models/sasrec.py": "bc63b1f0de7a520681e04914edbf37b8460e7f917c8e1a113480e4a5069dc63b",
+    "src/models/sid_trie.py": "158e111c1872fbfb9ec9623e26c8f97a0e391f1696e0a080f31ab07c8df91463"
+  }
+}

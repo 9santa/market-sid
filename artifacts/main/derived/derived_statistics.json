@@ -1,0 +1,111 @@
+{
+  "industrial": {
+    "path": "benchmarks/amazon-industrial-scientific/data/processed/semantic_ids.npy",
+    "sha256": "7fb8ca10f038c41a21818b2f29bd98ec903ad9261fa1bf54dd519ac98debc69f",
+    "shape": [
+      25848,
+      4
+    ],
+    "prefix_counts": [
+      66,
+      6466,
+      17667,
+      25848
+    ]
+  },
+  "content": {
+    "path": "data/processed/item_semantic_ids_content.npy",
+    "sha256": "e9f1c88e60ad8198081bc2b577515ad7cfba7b96412f02988bbd3f7ec9bd904c",
+    "shape": [
+      134288,
+      4
+    ],
+    "prefix_counts": [
+      256,
+      29590,
+      106572,
+      134288
+    ]
+  },
+  "svd_churn": [
+    {
+      "path": "data/processed/item_semantic_ids_behavior_0p001.npy",
+      "sha256": "8aaf60bf3588ee06b93283f431b021d207f7b8fe91bf8d2b07d7ae8067eb0bd3",
+      "fraction_changed": [
+        0.0407780293101394,
+        0.3135797688549982,
+        0.6915733349219588
+      ]
+    },
+    {
+      "path": "data/processed/item_semantic_ids_behavior_0p005.npy",
+      "sha256": "ade2bb8c68ac198d8711b4371989ba994292fef844213be5d30891f3998bc52a",
+      "fraction_changed": [
+        0.05832241153342071,
+        0.39447307279876087,
+        0.7925652329322054
+      ]
+    },
+    {
+      "path": "data/processed/item_semantic_ids_behavior_0p01.npy",
+      "sha256": "4dffbe1fb126462f028ff496d7bc4fa201f735c88de835f901c7b3bcca0e923d",
+      "fraction_changed": [
+        0.11878946741332062,
+        0.5333536875968069,
+        0.8833253902061241
+      ]
+    },
+    {
+      "path": "data/processed/item_semantic_ids_behavior_0p05.npy",
+      "sha256": "704a663f2a88656bb4d4f0a396a433ad1d8189a8eccb139e31deb66ce68f781e",
+      "fraction_changed": [
+        0.22264089121887287,
+        0.7059677707613488,
+        0.9581198617895865
+      ]
+    }
+  ],
+  "conditional_prior_spearman": [
+    0.4782941160957627,
+    0.9270023638460118,
+    0.48327240833272306,
+    0.644140853194067
+  ],
+  "singleton_c3": [
+    {
+      "group": "head",
+      "n": 1813,
+      "mean_valid_mass": 0.8371511101722717
+    },
+    {
+      "group": "mid",
+      "n": 2026,
+      "mean_valid_mass": 0.1722041666507721
+    },
+    {
+      "group": "tail",
+      "n": 4046,
+      "mean_valid_mass": 0.029897542670369148
+    },
+    {
+      "group": "unseen",
+      "n": 817,
+      "mean_valid_mass": 0.0143535565584898
+    }
+  ],
+  "review_date": "2026-09-19",
+  "methods": {
+    "prefix_counts": "np.unique(codes[:, :depth], axis=0), depths 1..4; arrays present at documentation time, not a new model evaluation",
+    "svd_churn": "Fraction of item rows with any changed code within each depth 1..3, versus current item_semantic_ids_content.npy; no collision suffix comparison",
+    "conditional_prior_spearman": "scipy.stats.spearmanr(log_prior_token_t, logp_token_t) over every saved test diagnostic row",
+    "singleton_c3": "Unique catalog three-code prefixes grouped by first two codes; retain parents with exactly one child; join saved target rows on c1,c2; mean(exp(logp_token_3)) by target group"
+  },
+  "path_diagnostic_source": {
+    "path": "artifacts/genrec_twotower_C_test_path_diagnostics.parquet",
+    "sha256": "739afc9bd1766ce2e0ffcbf63227810ac36a3dddd9c4229e2e33ed432e359b70"
+  },
+  "twotower_sid_source": {
+    "path": "data/processed/item_semantic_ids_twotower.npy",
+    "sha256": "7c167c45fde1913888def24be59187fe5e5bfd4fabd9043bf4388fddc5736a8a"
+  }
+}

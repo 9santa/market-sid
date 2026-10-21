@@ -1,0 +1,225 @@
+{
+  "artifact": "artifacts/prefix_retrieval_valid_full_tt_control.json",
+  "artifact_sha256": "41dbe407418e6f0d64a3ff313a00226becdcfa9460d0e095a7b65b1d0b0d871e",
+  "per_user_sha256": "47a593602f9ef8413842d4833a8edb7f308fe81dafa7b88a1a822ca43687cbbd",
+  "checks": "Reconstructed all Recall/NDCG metrics from target ranks; existing methods exactly match previous full validation report; provenance matches.",
+  "inference": "Two-sided exact McNemar via binomial test on discordant users. Unadjusted exploratory comparisons; no correction for multiple comparisons or training seeds.",
+  "comparisons": [
+    {
+      "method": "hybrid_full_two_tower_slots5",
+      "reference": "exact",
+      "groups": {
+        "all": {
+          "n": 80471,
+          "wins": 283,
+          "losses": 251,
+          "exact_mcnemar_p_unadjusted": 0.17970356006791827
+        },
+        "head": {
+          "n": 23867,
+          "wins": 211,
+          "losses": 231,
+          "exact_mcnemar_p_unadjusted": 0.3661512728433962
+        },
+        "mid": {
+          "n": 19843,
+          "wins": 32,
+          "losses": 12,
+          "exact_mcnemar_p_unadjusted": 0.003657766827927844
+        },
+        "tail": {
+          "n": 32279,
+          "wins": 32,
+          "losses": 5,
+          "exact_mcnemar_p_unadjusted": 7.427530363202095e-06
+        },
+        "unseen": {
+          "n": 4482,
+          "wins": 8,
+          "losses": 3,
+          "exact_mcnemar_p_unadjusted": 0.2265625
+        }
+      }
+    },
+    {
+      "method": "hybrid2_two_tower_slots5",
+      "reference": "hybrid_full_two_tower_slots5",
+      "groups": {
+        "all": {
+          "n": 80471,
+          "wins": 49,
+          "losses": 80,
+          "exact_mcnemar_p_unadjusted": 0.008007673208090864
+        },
+        "head": {
+          "n": 23867,
+          "wins": 25,
+          "losses": 44,
+          "exact_mcnemar_p_unadjusted": 0.029493493531317295
+        },
+        "mid": {
+          "n": 19843,
+          "wins": 12,
+          "losses": 15,
+          "exact_mcnemar_p_unadjusted": 0.7011080384254456
+        },
+        "tail": {
+          "n": 32279,
+          "wins": 12,
+          "losses": 17,
+          "exact_mcnemar_p_unadjusted": 0.45825831964612007
+        },
+        "unseen": {
+          "n": 4482,
+          "wins": 0,
+          "losses": 4,
+          "exact_mcnemar_p_unadjusted": 0.125
+        }
+      }
+    },
+    {
+      "method": "hybrid3_two_tower_slots5",
+      "reference": "hybrid_full_two_tower_slots5",
+      "groups": {
+        "all": {
+          "n": 80471,
+          "wins": 127,
+          "losses": 145,
+          "exact_mcnemar_p_unadjusted": 0.3026371194859955
+        },
+        "head": {
+          "n": 23867,
+          "wins": 87,
+          "losses": 84,
+          "exact_mcnemar_p_unadjusted": 0.8785004707476696
+        },
+        "mid": {
+          "n": 19843,
+          "wins": 24,
+          "losses": 26,
+          "exact_mcnemar_p_unadjusted": 0.887724827340783
+        },
+        "tail": {
+          "n": 32279,
+          "wins": 16,
+          "losses": 29,
+          "exact_mcnemar_p_unadjusted": 0.07245426016254441
+        },
+        "unseen": {
+          "n": 4482,
+          "wins": 0,
+          "losses": 6,
+          "exact_mcnemar_p_unadjusted": 0.03125
+        }
+      }
+    },
+    {
+      "method": "hybrid_full_two_tower_slots10",
+      "reference": "exact",
+      "groups": {
+        "all": {
+          "n": 80471,
+          "wins": 489,
+          "losses": 512,
+          "exact_mcnemar_p_unadjusted": 0.48685258213861876
+        },
+        "head": {
+          "n": 23867,
+          "wins": 332,
+          "losses": 473,
+          "exact_mcnemar_p_unadjusted": 7.559461387174989e-07
+        },
+        "mid": {
+          "n": 19843,
+          "wins": 75,
+          "losses": 26,
+          "exact_mcnemar_p_unadjusted": 1.1154954264353208e-06
+        },
+        "tail": {
+          "n": 32279,
+          "wins": 72,
+          "losses": 10,
+          "exact_mcnemar_p_unadjusted": 1.0224592793857492e-12
+        },
+        "unseen": {
+          "n": 4482,
+          "wins": 10,
+          "losses": 3,
+          "exact_mcnemar_p_unadjusted": 0.09228515625
+        }
+      }
+    },
+    {
+      "method": "hybrid2_two_tower_slots10",
+      "reference": "hybrid_full_two_tower_slots10",
+      "groups": {
+        "all": {
+          "n": 80471,
+          "wins": 95,
+          "losses": 136,
+          "exact_mcnemar_p_unadjusted": 0.008352148678445725
+        },
+        "head": {
+          "n": 23867,
+          "wins": 46,
+          "losses": 70,
+          "exact_mcnemar_p_unadjusted": 0.032272020733093106
+        },
+        "mid": {
+          "n": 19843,
+          "wins": 29,
+          "losses": 27,
+          "exact_mcnemar_p_unadjusted": 0.8938530948350216
+        },
+        "tail": {
+          "n": 32279,
+          "wins": 16,
+          "losses": 33,
+          "exact_mcnemar_p_unadjusted": 0.021294114141387155
+        },
+        "unseen": {
+          "n": 4482,
+          "wins": 4,
+          "losses": 6,
+          "exact_mcnemar_p_unadjusted": 0.75390625
+        }
+      }
+    },
+    {
+      "method": "hybrid3_two_tower_slots10",
+      "reference": "hybrid_full_two_tower_slots10",
+      "groups": {
+        "all": {
+          "n": 80471,
+          "wins": 269,
+          "losses": 269,
+          "exact_mcnemar_p_unadjusted": 1.0
+        },
+        "head": {
+          "n": 23867,
+          "wins": 184,
+          "losses": 139,
+          "exact_mcnemar_p_unadjusted": 0.014230188603374227
+        },
+        "mid": {
+          "n": 19843,
+          "wins": 54,
+          "losses": 59,
+          "exact_mcnemar_p_unadjusted": 0.7068822614919525
+        },
+        "tail": {
+          "n": 32279,
+          "wins": 31,
+          "losses": 63,
+          "exact_mcnemar_p_unadjusted": 0.001261386598131299
+        },
+        "unseen": {
+          "n": 4482,
+          "wins": 0,
+          "losses": 8,
+          "exact_mcnemar_p_unadjusted": 0.0078125
+        }
+      }
+    }
+  ]
+}
