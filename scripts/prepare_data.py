@@ -3,6 +3,8 @@ from datasets import load_dataset
 import polars as pl
 from pathlib import Path
 
+from src.data.amazon_preprocessing import iterative_k_core
+
 
 # Категории специально выбраны связанные,
 # чтобы можно было оценить behaviour-aware Semantic IDs:
@@ -217,51 +219,6 @@ print(
 
 MIN_USER_INTERACTIONS = 5
 MIN_ITEM_INTERACTIONS = 2
-
-
-def iterative_k_core(
-    df: pl.DataFrame,
-    min_user_interactions: int,
-    min_item_interactions: int,
-) -> pl.DataFrame:
-    iteration = 0
-
-    while True:
-        iteration += 1
-        old_rows = len(df)
-
-        valid_users = (
-            df.group_by("user_id")
-            .agg(pl.len().alias("n"))
-            .filter(pl.col("n") >= min_user_interactions)
-            .select("user_id")
-        )
-
-        df = df.join(
-            valid_users,
-            on="user_id",
-            how="semi",
-        )
-
-        valid_items = (
-            df.group_by("parent_asin")
-            .agg(pl.len().alias("n"))
-            .filter(pl.col("n") >= min_item_interactions)
-            .select("parent_asin")
-        )
-
-        df = df.join(
-            valid_items,
-            on="parent_asin",
-            how="semi",
-        )
-
-        print(f"K-core iteration {iteration}: {old_rows:,} -> {len(df):,} interactions")
-
-        if len(df) == old_rows:
-            break
-
-    return df
 
 
 sampled = iterative_k_core(

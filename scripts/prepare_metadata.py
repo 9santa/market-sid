@@ -1,9 +1,8 @@
 from huggingface_hub import snapshot_download
 import polars as pl
 from pathlib import Path
-import json
-import re
-import html
+
+from src.data.amazon_preprocessing import build_item_text
 
 
 DATA_DIR = Path("data/processed")
@@ -95,123 +94,6 @@ print("\nMetadata rows:", len(metadata))
 
 
 # BUILD ITEM TEXT
-
-WHITESPACE_RE = re.compile(r"\s+")
-HTML_RE = re.compile(r"<[^>]+>")
-
-IGNORE_DETAIL_KEYS = {
-    "ASIN",
-    "UPC",
-    "EAN",
-    "ISBN",
-    "Best Sellers Rank",
-    "Customer Reviews",
-    "Date First Available",
-}
-
-
-def clean(value) -> str:
-    if value is None:
-        return ""
-
-    value = str(value)
-    value = html.unescape(value)
-    value = HTML_RE.sub(" ", value)
-    value = WHITESPACE_RE.sub(" ", value)
-
-    return value.strip()
-
-
-def clean_list(values, limit=None) -> list[str]:
-    if not values:
-        return []
-
-    result = [clean(v) for v in values if clean(v)]
-
-    if limit is not None:
-        result = result[:limit]
-
-    return result
-
-
-def format_details(raw_details) -> str:
-    if not raw_details:
-        return ""
-
-    try:
-        if isinstance(raw_details, str):
-            details = json.loads(raw_details)
-        else:
-            details = raw_details
-    except (json.JSONDecodeError, TypeError):
-        return ""
-
-    if not isinstance(details, dict):
-        return ""
-
-    parts = []
-
-    for key, value in details.items():
-        if key in IGNORE_DETAIL_KEYS:
-            continue
-
-        key = clean(key)
-        value = clean(value)
-
-        if not key or not value:
-            continue
-
-        # Guard against mega-long fields
-        value = value[:200]
-
-        parts.append(f"{key}: {value}")
-
-        if len(parts) >= 12:
-            break
-
-    return "; ".join(parts)
-
-
-def build_item_text(row: dict) -> str:
-    parts = []
-
-    title = clean(row.get("title"))
-    if title:
-        parts.append(f"Title: {title}")
-
-    store = clean(row.get("store"))
-    if store:
-        parts.append(f"Brand or store: {store}")
-
-    categories = clean_list(
-        row.get("categories"),
-        limit=8,
-    )
-    if categories:
-        parts.append("Categories: " + " > ".join(categories))
-
-    features = clean_list(
-        row.get("features"),
-        limit=10,
-    )
-    if features:
-        parts.append("Features: " + "; ".join(features))
-
-    descriptions = clean_list(
-        row.get("description"),
-        limit=3,
-    )
-    if descriptions:
-        parts.append("Description: " + " ".join(descriptions))
-
-    details = format_details(row.get("details"))
-    if details:
-        parts.append("Details: " + details)
-
-    text = "\n".join(parts)
-
-    return text[:4000]
-
 
 metadata = metadata.with_columns(
     pl.struct(metadata.columns)
