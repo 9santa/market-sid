@@ -23,8 +23,8 @@ class GenerativeRecommender(nn.Module):
         если True, первые semantic output heads используют
         те же embeddings, что и input side.
 
-    Последний SID level считается collision token и
-    всегда остаётся обычным learned embedding/head.
+    By default the last SID level is a collision token. For pure RQ IDs,
+    pass num_semantic_levels equal to the full SID length.
     """
 
     def __init__(
@@ -40,6 +40,7 @@ class GenerativeRecommender(nn.Module):
         embedding_mode: str = "scratch",
         tie_semantic_output: bool = False,
         rq_codebooks: list[torch.Tensor] | None = None,
+        num_semantic_levels: int | None = None,
     ):
         super().__init__()
 
@@ -53,7 +54,11 @@ class GenerativeRecommender(nn.Module):
         self.max_len = max_len
         self.d_model = d_model
         self.num_levels = len(vocab_sizes)
-        self.num_semantic_levels = self.num_levels - 1
+        self.num_semantic_levels = (
+            self.num_levels - 1 if num_semantic_levels is None else num_semantic_levels
+        )
+        if not 1 <= self.num_semantic_levels <= self.num_levels:
+            raise ValueError("num_semantic_levels must be between 1 and the SID length")
         self.vocab_sizes = vocab_sizes
         self.embedding_mode = embedding_mode
         self.tie_semantic_output = tie_semantic_output

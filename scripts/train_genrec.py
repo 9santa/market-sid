@@ -4,6 +4,7 @@ import json
 import random
 import time
 import argparse
+import hashlib
 
 import numpy as np
 import polars as pl
@@ -23,7 +24,9 @@ from src.data.genrec_dataset import (
 
 DATA_DIR = Path("data/processed")
 CHECKPOINT_DIR = Path("checkpoints")
-RQ_CHECKPOINT = CHECKPOINT_DIR / "rqvae_content_best.pt"
+HISTORY_DIR = Path("artifacts/main/training")
+SID_CONTROLS = {"twotower_original": "twotower", "twotower_permuted": "twotower"}
+SID_SOURCES = ["content", "twotower", "rq4_a", "rq4_b", "rq4_c", *SID_CONTROLS]
 
 
 CONFIG = {
@@ -52,7 +55,13 @@ def set_seed(seed):
     torch.cuda.manual_seed_all(seed)
 
 
+def file_hash(path):
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
 def save_history(history, path):
+    path.parent.mkdir(parents=True, exist_ok=True)
     # Replace the previous snapshot only after the new JSON is fully written.
     temporary_path = path.with_suffix(".json.tmp")
     temporary_path.write_text(
@@ -60,6 +69,17 @@ def save_history(history, path):
         encoding="utf-8",
     )
     temporary_path.replace(path)
+
+
+def model_state_hash(model):
+    """Fingerprint initialization; item_sids is a nonpersistent buffer."""
+    digest = hashlib.sha256()
+    for name, value in sorted(model.state_dict().items()):
+        array = value.detach().cpu().numpy()
+        digest.update(name.encode())
+        digest.update(str((array.shape, array.dtype)).encode())
+        digest.update(array.tobytes())
+    return digest.hexdigest()
 
 
 def load_rq_codebooks(checkpoint_path):
@@ -282,7 +302,24 @@ def main():
         default=0.01,
     )
 
+    parser.add_argument(
+        "--sid-source",
+        choices=SID_SOURCES,
+        default="content",
+    )
+    parser.add_argument("--seed", type=int, default=CONFIG["seed"])
+    parser.add_argument("--epochs", type=int, default=CONFIG["epochs"])
+    parser.add_argument("--no-early-stopping", action="store_true",
+                        help="Run the full epoch budget; still select best validation loss")
+
     args = parser.parse_args()
+    if args.seed < 0 or args.epochs < 1:
+        parser.error("Require nonnegative seed and positive epochs")
+    config = {**CONFIG, "seed": args.seed, "epochs": args.epochs}
+
+    sid_path = DATA_DIR / f"item_semantic_ids_{args.sid_source}.npy"
+    rq_source = SID_CONTROLS.get(args.sid_source, args.sid_source)
+    rq_checkpoint_path = CHECKPOINT_DIR / f"rqvae_{rq_source}_best.pt"
 
     VARIANTS = {
         "A": {
@@ -310,10 +347,13 @@ def main():
     variant_config = VARIANTS[args.variant]
 
     print("Experiment variant:", args.variant)
+    print("SID source:", args.sid_source)
+    print("SID file:", sid_path)
+    print("RQ checkpoint:", rq_checkpoint_path)
     print(variant_config)
 
     CHECKPOINT_DIR.mkdir(exist_ok=True)
-    set_seed(CONFIG["seed"])
+    set_seed(config["seed"])
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -327,10 +367,39 @@ def main():
     sequences_df = pl.read_parquet(DATA_DIR / "user_sequences.parquet").sort("user_idx")
 
     sequences = sequences_df["item_sequence"].to_list()
+    data_signature = {
+        name: file_hash(DATA_DIR / name)
+        for name in ("catalog_model.parquet", "user_sequences.parquet", "interactions_model.parquet")
+    }
 
-    semantic_ids = np.load(DATA_DIR / "item_semantic_ids_content.npy")
+    semantic_ids = np.load(sid_path)
+    sid_sha256 = file_hash(sid_path)
+    rq_sha256 = file_hash(rq_checkpoint_path)
+    sid_control = None
+    if args.sid_source in SID_CONTROLS:
+        sid_control = json.loads(sid_path.with_suffix(".json").read_text())
+        if (
+            sid_control["sid_source"] != args.sid_source
+            or sid_control["sid_sha256"] != sid_sha256
+            or sid_control["data_signature"] != data_signature
+            or sid_control["rq_checkpoint_sha256"] != rq_sha256
+            or sid_control["source_sid_sha256"] != file_hash(DATA_DIR / f"item_semantic_ids_{rq_source}.npy")
+            or sid_control["permutation_sha256"] != file_hash(DATA_DIR / sid_control["permutation_file"])
+        ):
+            raise ValueError("SID control inputs changed; prepare the control again")
+        print("SID control:", sid_control["role"], "permutation seed:", sid_control["seed"])
 
     assert len(semantic_ids) == len(catalog)
+    assert catalog["item_idx"].to_list() == list(range(1, len(catalog) + 1))
+    assert len(np.unique(semantic_ids, axis=0)) == len(catalog), "SID collisions"
+    if args.sid_source.startswith("rq4_"):
+        metadata = json.loads(sid_path.with_suffix(".json").read_text())
+        if (
+            metadata["sid_sha256"] != sid_sha256
+            or metadata["rq_checkpoint_sha256"] != file_hash(rq_checkpoint_path)
+            or metadata["catalog_sha256"] != file_hash(DATA_DIR / "catalog_model.parquet")
+        ):
+            raise ValueError("SID export, RQ checkpoint or catalog changed; re-export SIDs")
 
     num_items = len(catalog)
 
@@ -352,12 +421,17 @@ def main():
         int(semantic_ids[:, level].max()) + 1 for level in range(semantic_ids.shape[1])
     ]
 
-    print(
-        "Vocab sizes:",
-        vocab_sizes,
-    )
-
-    rq_codebooks = load_rq_codebooks(RQ_CHECKPOINT)
+    rq_codebooks = load_rq_codebooks(rq_checkpoint_path)
+    num_semantic_levels = len(rq_codebooks)
+    expected_levels = 4 if args.sid_source.startswith("rq4_") else 3
+    if num_semantic_levels != expected_levels or semantic_ids.shape[1] != 4:
+        raise ValueError("Expected four SID tokens and the source's matching RQ depth")
+    # Unused high-numbered codes still belong to the trained RQ vocabulary.
+    for level, codebook in enumerate(rq_codebooks):
+        vocab_sizes[level] = len(codebook)
+    if np.any(semantic_ids < 0) or np.any(semantic_ids >= np.asarray(vocab_sizes)):
+        raise ValueError("SID tokens fall outside the RQ vocabularies")
+    print("Vocab sizes:", vocab_sizes)
 
     if args.variant == "A":
         rq_codebooks_for_model = None
@@ -377,15 +451,15 @@ def main():
     # ============================================================
     train_dataset = GenRecTrainDataset(
         sequences=sequences,
-        max_len=CONFIG["max_len"],
+        max_len=config["max_len"],
     )
 
     train_loader = DataLoader(
         train_dataset,
-        batch_size=CONFIG["batch_size"],
+        batch_size=config["batch_size"],
         shuffle=True,
-        num_workers=4,
-        prefetch_factor=2,
+        num_workers=8,
+        prefetch_factor=8,
         pin_memory=(device.type == "cuda"),
     )
 
@@ -401,21 +475,25 @@ def main():
     model = GenerativeRecommender(
         item_sids=torch.from_numpy(item_sids),
         vocab_sizes=vocab_sizes,
-        max_len=CONFIG["max_len"],
-        d_model=CONFIG["d_model"],
-        n_heads=CONFIG["n_heads"],
-        n_encoder_layers=CONFIG["n_encoder_layers"],
-        n_decoder_layers=CONFIG["n_decoder_layers"],
-        dropout=CONFIG["dropout"],
+        max_len=config["max_len"],
+        d_model=config["d_model"],
+        n_heads=config["n_heads"],
+        n_encoder_layers=config["n_encoder_layers"],
+        n_decoder_layers=config["n_decoder_layers"],
+        dropout=config["dropout"],
         embedding_mode=variant_config["embedding_mode"],
         tie_semantic_output=variant_config["tie_semantic_output"],
         rq_codebooks=(rq_codebooks_for_model),
+        num_semantic_levels=num_semantic_levels,
     ).to(device)
+
+    initialization_sha256 = model_state_hash(model)
+    print("Initial model state SHA-256:", initialization_sha256)
 
     optimizer = torch.optim.AdamW(
         model.parameters(),
-        lr=CONFIG["lr"],
-        weight_decay=CONFIG["weight_decay"],
+        lr=config["lr"],
+        weight_decay=config["weight_decay"],
     )
 
     scaler = torch.amp.GradScaler(
@@ -429,11 +507,25 @@ def main():
 
     started_at = datetime.now(timezone.utc)
     run_id = started_at.strftime("%Y%m%dT%H%M%S%fZ")
-    history_path = CHECKPOINT_DIR / f"genrec_history_{run_id}.json"
+    history_path = HISTORY_DIR / (
+        f"genrec_{args.sid_source}_{args.variant}_history_{run_id}.json"
+    )
     history = {
         "run_id": run_id,
         "started_at": started_at.isoformat(),
-        "config": dict(CONFIG),
+        "config": dict(config),
+        "sid_source": args.sid_source,
+        "num_semantic_levels": num_semantic_levels,
+        "data_signature": data_signature,
+        "sid_path": str(sid_path),
+        "sid_sha256": sid_sha256,
+        "rq_checkpoint": str(rq_checkpoint_path),
+        "rq_checkpoint_sha256": rq_sha256,
+        "initialization_sha256": initialization_sha256,
+        "sid_control": sid_control,
+        "early_stopping_enabled": not args.no_early_stopping,
+        "variant": args.variant,
+        "variant_config": variant_config,
         "device": str(device),
         "vocab_sizes": vocab_sizes,
         "num_users": len(sequences),
@@ -450,7 +542,7 @@ def main():
 
     for epoch in range(
         1,
-        CONFIG["epochs"] + 1,
+        config["epochs"] + 1,
     ):
         epoch_started = time.perf_counter()
         losses = train_one_epoch(
@@ -466,7 +558,7 @@ def main():
             model,
             sequences,
             device,
-            CONFIG["max_len"],
+            config["max_len"],
         )
 
         print(
@@ -481,12 +573,24 @@ def main():
             best_epoch = epoch
             patience_counter = 0
 
-            CHECKPOINT_PATH = CHECKPOINT_DIR / f"genrec_content_{args.variant}_best.pt"
+            CHECKPOINT_PATH = CHECKPOINT_DIR / (
+                f"genrec_{args.sid_source}_{args.variant}_best.pt"
+            )
 
             torch.save(
                 {
                     "model_state_dict": model.state_dict(),
-                    "config": CONFIG,
+                    "config": config,
+                    "sid_source": args.sid_source,
+                    "num_semantic_levels": num_semantic_levels,
+                    "data_signature": data_signature,
+                    "sid_path": str(sid_path),
+                    "sid_sha256": sid_sha256,
+                    "rq_checkpoint": str(rq_checkpoint_path),
+                    "rq_checkpoint_sha256": rq_sha256,
+                    "initialization_sha256": initialization_sha256,
+                    "sid_control": sid_control,
+                    "early_stopping_enabled": not args.no_early_stopping,
                     "variant": args.variant,
                     "variant_config": variant_config,
                     "vocab_sizes": vocab_sizes,
@@ -515,7 +619,7 @@ def main():
         )
         history["best_epoch"] = best_epoch
         history["best_metric"] = best_loss
-        history["stopped_early"] = patience_counter >= CONFIG["patience"]
+        history["stopped_early"] = not args.no_early_stopping and patience_counter >= config["patience"]
         save_history(history, history_path)
 
         if history["stopped_early"]:

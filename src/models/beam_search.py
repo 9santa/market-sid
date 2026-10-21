@@ -8,6 +8,8 @@ Main optimizations:
 - Keep scores on GPU until generation on all levels is finished.
 """
 
+import math
+
 import torch
 import torch.nn.functional as F
 
@@ -20,6 +22,10 @@ def constrained_beam_search(
     beam_size: int = 100,
     *,
     decode_batch_size=2048,
+    prior_alpha=0.0,
+    prior_log_probs=None,
+    prior_levels=None,
+    trie_normalize=False,
 ) -> list:
     """Single-user wrapper around the batched implementation.
 
@@ -35,7 +41,7 @@ def constrained_beam_search(
             at once. This limits GPU memory usage.
 
     Returns:
-        list[(item_id, log_probability)]
+        list[(item_id, score)]; corrected scores are not log probabilities.
     """
     if item_seq.ndim != 2 or item_seq.shape[0] != 1:
         raise ValueError("Single-user search expects item_seq shape [1, L]")
@@ -46,6 +52,10 @@ def constrained_beam_search(
         item_seq=item_seq,
         beam_size=beam_size,
         decode_batch_size=decode_batch_size,
+        prior_alpha=prior_alpha,
+        prior_log_probs=prior_log_probs,
+        prior_levels=prior_levels,
+        trie_normalize=trie_normalize,
     )[0]
 
 
@@ -67,7 +77,13 @@ def batched_constrained_beam_search(
     beam_size: int = 100,
     *,
     decode_batch_size=2048,
-) -> list[list]:
+    target_sids=None,
+    prior_alpha=0.0,
+    prior_log_probs=None,
+    prior_levels=None,
+    trie_normalize=False,
+    capture_prefixes=False,
+):
     """Catalog-constrained beam search for many users at once.
 
     Naive version conceptually did:
@@ -102,7 +118,8 @@ def batched_constrained_beam_search(
 
     Args:
         model:
-            Generative recommender.
+            Generative recommender. May expose next_token_log_probs instead of
+            next_token_logits to preserve shared-vocabulary normalization.
 
         trie:
             SIDTrie supporting:
@@ -117,8 +134,31 @@ def batched_constrained_beam_search(
         decode_batch_size:
             How many flattened user/beam rows to decode simultaneously.
 
+        target_sids:
+            Optional [B, num_levels] correct SIDs for diagnostics only.
+            These never influence beam scores or selection.
+
+        prior_alpha:
+            Subtract alpha times the conditional training log prior at every
+            expansion. Zero preserves the original likelihood scoring.
+
+        prior_log_probs:
+            One vector per SID level, indexed by the trie's child node IDs.
+            Entries are finite, smoothed conditional training log probabilities.
+
+        prior_levels:
+            Optional one-based SID positions to correct; None corrects all levels.
+
+        trie_normalize:
+            Normalize over valid children instead of the full vocabulary.
+            A singleton branch then adds zero to the model log score.
+
     Returns:
-        list[list[(item_id, log_probability)]]
+        list[list[(item_id, score)]]. Corrected scores are not log probabilities.
+        If target_sids is supplied,
+        also returns a CPU boolean tensor [B, num_levels] with prefix survival.
+        If capture_prefixes=True, append a list of per-level snapshots; each
+        snapshot containts CPU 'prefixes' [B, width, level] and 'scores' [B, width].
     """
     if beam_size <= 0:
         raise ValueError("beam_size must be positive")
@@ -126,16 +166,47 @@ def batched_constrained_beam_search(
     if decode_batch_size <= 0:
         raise ValueError("decode_batch_size must be positive")
 
+    if not math.isfinite(prior_alpha) or prior_alpha < 0:
+        raise ValueError("prior_alpha must be finite and nonnegative")
+    if prior_alpha and (
+        prior_log_probs is None or len(prior_log_probs) != model.num_levels
+    ):
+        raise ValueError("Prior correction requires one log-prior vector per SID level")
+    if prior_levels is not None and (
+        not prior_levels
+        or any(level not in range(1, model.num_levels + 1) for level in prior_levels)
+    ):
+        raise ValueError("prior_levels must contain valid one-based SID positions")
+
     if item_seq.ndim != 2 or item_seq.shape[0] == 0:
         raise ValueError("Expected a non-empty item_seq with shape [B, L]")
 
     model.eval()
+    snapshots = [] if capture_prefixes else None
 
     device = item_seq.device
     batch_size = item_seq.shape[0]
 
+    if target_sids is not None:
+        target_sids = torch.as_tensor(target_sids, device=device, dtype=torch.long)
+        if target_sids.shape != (batch_size, model.num_levels):
+            raise ValueError("Expected target_sids shape [B, num_levels]")
+        survival = torch.zeros(
+            batch_size,
+            model.num_levels,
+            dtype=torch.bool,
+            device=device,
+        )
+
     # 1. Encode user history once
     memory, padding_mask = model.encode_history(item_seq)
+
+    # Shared-vocabulary models may return already normalized, level-sliced scores.
+    # Applying softmax again would discard probability mass on invalid token types.
+    returns_log_probs = hasattr(model, "next_token_log_probs")
+    decode = (
+        model.next_token_log_probs if returns_log_probs else model.next_token_logits
+    )
 
     # 2. Get tensor representation of the trie.
     # transitions[level]: [number_of_parent_nodes, vocab_size_at_this_level]
@@ -190,7 +261,7 @@ def batched_constrained_beam_search(
                 // beam_width
             )
 
-            chunk_logits = model.next_token_logits(
+            chunk_logits = decode(
                 memory[owners],
                 padding_mask[owners],
                 flat_prefixes[start:stop],
@@ -214,7 +285,22 @@ def batched_constrained_beam_search(
         valid = children.ge(0)
 
         # 3. Compute token probabilities
-        log_probs = F.log_softmax(logits, dim=-1)
+        if trie_normalize:
+            # Every trie node has a child at the next level. Invalid beam slots
+            # use a valid placeholder node and keep their -inf accumulated score.
+            logits = logits.masked_fill(~valid, -torch.inf)
+        log_probs = (
+            F.log_softmax(logits, dim=-1)
+            if trie_normalize or not returns_log_probs
+            else logits
+        )
+
+        if prior_alpha and (prior_levels is None or level + 1 in prior_levels):
+            # Correct before pruning, so rare prefixes can enter the next beam.
+            # Invalid children are masked below; their placeholder lookup is safe.
+            log_probs = (
+                log_probs - prior_alpha * prior_log_probs[level][children.clamp_min(0)]
+            )
 
         log_probs = log_probs.masked_fill(~valid, -torch.inf)
 
@@ -265,6 +351,19 @@ def batched_constrained_beam_search(
             .clamp_min(0)
         )
 
+        if capture_prefixes:
+            snapshots.append(
+                {
+                    "prefixes": prefixes.detach().cpu().clone(),
+                    "scores": scores.detach().cpu().clone(),
+                }
+            )
+
+        if target_sids is not None:
+            # Inspect the retained beam, excluding invalid slots with -inf scores.
+            matches = (prefixes == target_sids[:, None, : level + 1]).all(dim=-1)
+            survival[:, level] = (matches & torch.isfinite(scores)).any(dim=1)
+
     item_ids = leaves[nodes].cpu()
     final_scores = scores.cpu()
 
@@ -282,6 +381,12 @@ def batched_constrained_beam_search(
             )
         )
 
+    if target_sids is not None and capture_prefixes:
+        return results, survival.cpu(), snapshots
+    if target_sids is not None:
+        return results, survival.cpu()
+    if capture_prefixes:
+        return results, snapshots
     return results
 
 
