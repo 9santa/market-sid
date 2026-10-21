@@ -35,37 +35,4 @@ results does not add automatic versioning or prevent overwriting default outputs
 Start with the [research notebook](experiments/README.md) for the hypothesis,
 protocol, and interpretation. Follow its links to the raw measurements.
 `benchmarks/` contains executable pipelines and their READMEs, not new result files.
-The old top-level `experiments/` directory has been split between documentation
-and `artifacts/main/derived/`.
 
-## Historical paths and integrity
-
-The cleanup on 2026-10-21 moved files without rewriting historical JSON, NPZ,
-logs, or archived source snapshots. Model weights and data stayed in place.
-Markdown links and command examples now point to the new locations.
-
-[The migration manifest](repository_layout_migration.json) records every old path,
-new path, and SHA-256 before the move. Old paths embedded in evidence JSON or
-checkpoint metadata remain unchanged so their hashes remain verifiable.
-For example, a saved `training_history` or `per_user_results.path` may use an old path.
-Resolve it when reading historical metadata:
-
-```python
-import json
-import numpy as np
-from src.result_paths import resolve_result_path
-
-result = json.loads(resolve_result_path(
-    "artifacts/prefix_retrieval_valid_full_tt_control.json"
-).read_text())
-rows = np.load(resolve_result_path(result["per_user_results"]["path"]))
-```
-
-The SID comparison report resolves old training-history references automatically.
-The main model comparison report also accepts old input result paths. Other
-commands and external notebooks should use the new paths or this helper explicitly.
-Archived code is preserved as evidence; its embedded paths have not been modernized.
-
-Raw outputs, weights, and data remain ignored by Git. Research Markdown, migration
-metadata, small derived evidence, and the three previously tracked baseline
-histories are included. The local `docs/notes.md` scratchpad remains ignored.
