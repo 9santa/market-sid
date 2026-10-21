@@ -45,7 +45,7 @@ def main():
     ).tocsr()
 
     print("User-item:", X.shape)
-    print("NNZ:", X.nnz) # number of non-zero entries
+    print("NNZ:", X.nnz)  # number of non-zero entries
 
     # We normalize, so that extremely active user is less informative
     # as evidence that two particular items belong together.
@@ -97,6 +97,17 @@ def main():
     # Mask items that occur at least once
     warm_mask = train_counts > 0
 
+    print("Warm items:", int(warm_mask.sum()))
+    print("Unseen items:", int((~warm_mask).sum()))
+
+    warm_norms = np.linalg.norm(
+        behavior[warm_mask],
+        axis=1,
+    )
+
+    warm_mean = behavior[warm_mask].mean(axis=0, keepdims=True)
+    behavior[warm_mask] -= warm_mean
+
     norms = np.linalg.norm(
         behavior,
         axis=1,
@@ -111,14 +122,6 @@ def main():
         norms,
         out=np.zeros_like(behavior),
         where=norms > 0,
-    )
-
-    print("Warm items:", int(warm_mask.sum()))
-    print("Unseen items:", int((~warm_mask).sum()))
-
-    warm_norms = np.linalg.norm(
-        behavior[warm_mask],
-        axis=1,
     )
 
     print("Warm norm mean:", float(warm_norms.mean()))

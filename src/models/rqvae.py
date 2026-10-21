@@ -28,13 +28,14 @@ class ResidualQuantizer(nn.Module):
                 1.0 / codebook_size,
             )
 
-    def forward(self, z):
+    def forward(self, z, *, return_prefixes=False):
         """
         z: [B, D]
         """
         residual = z
         quantized = torch.zeros_like(z)
         codes = []
+        prefixes = []
 
         codebook_loss = z.new_zeros(())
         commitment_loss = z.new_zeros(())
@@ -61,6 +62,9 @@ class ResidualQuantizer(nn.Module):
 
             # Accumulate attached q for STE
             quantized = quantized + q
+            if return_prefixes:
+                # Same straight-through estimator as the full reconstruction.
+                prefixes.append(z + (quantized - z).detach())
 
             # Detach q when updating the residual to prevent gradient leekage
             residual = residual - q.detach()
@@ -72,6 +76,8 @@ class ResidualQuantizer(nn.Module):
 
         codes = torch.stack(codes, dim=-1)
 
+        if return_prefixes:
+            return z_q, codes, loss, prefixes
         return z_q, codes, loss
 
 
