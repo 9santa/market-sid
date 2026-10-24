@@ -1,12 +1,8 @@
 # Main dataset: SID depth and Two-Tower supervision
 
-This page is the runnable protocol. See the [research log](../research_log.md#6-four-learned-codes-and-uniqueness-aware-export--h07)
-for the original hypothesis and subsequent interpretation, and the
-[saved results](../results/overview.md#main-sid-comparison) for the completed comparisons.
+Commands for the SID-depth comparison. Background is in the [research log](../research_log.md#6-four-learned-codes-and-uniqueness-aware-export--h07); measured outcomes are in [results](../results/overview.md#main-sid-comparison).
 
-All runs use the existing main dataset in `data/processed`, frozen exported
-Two-Tower vectors, and GenRec architecture **C**. SID variant letters below are
-separate from the GenRec `--variant` argument, which always stays `C`.
+All runs share the main dataset, frozen Two-Tower item vectors, and GenRec **variant C**. The SID versions A/B/C below are tokenizer labels, not GenRec variants.
 
 | SID version | RQ input | Extra tokenizer supervision | SID structure | `--sid-source` |
 |---|---|---|---|---|
@@ -15,21 +11,9 @@ separate from the GenRec `--variant` argument, which always stays `C`.
 | B | BGE vectors | Predict frozen Two-Tower vector from final RQ sum | 4 RQ | `rq4_b` |
 | C | Same BGE vectors | Same prediction at every partial RQ sum | 4 RQ | `rq4_c` |
 
-For B/C, a shared linear projection maps each supervised quantized sum to the
-teacher dimension. The loss is reconstruction MSE + existing VQ loss +
-`behavior_weight * mean(1 - cosine(prediction, teacher))`. B uses depth 4;
-C averages depths 1–4, keeping the overall weight and parameter count identical.
-Both use the existing straight-through estimator: the auxiliary loss trains the
-encoder and projection; codebook vectors are updated through the VQ loss.
-This encourages prefix-level predictability, but does not guarantee locality.
+For B/C, a linear projection maps quantized sums to the Two-Tower teacher dimension. Loss: reconstruction MSE + VQ loss + `behavior_weight * mean(1 - cosine(prediction, teacher))`. B supervises depth 4; C averages depths 1–4. They use the same weight and parameter count. The auxiliary loss trains the encoder and projection; codebooks are updated by VQ loss.
 
-Defaults: 30 tokenizer epochs, batch 1024, Adam lr 0.001, seed 42,
-hidden/latent dimensions 256/128, four 256-entry codebooks, beta 0.25,
-behavior weight 0.05. This weight is an experimental starting point, not a tuned
-value. Keep it identical for B and C. Select each tokenizer by reconstruction
-loss, matching the current tokenizer's rule. GenRec retains its existing
-Transformer, optimizer, split, and validation selection settings. All four
-RQ levels receive initialization and input/output tying in A/B/C.
+Tokenizer defaults: 30 epochs, batch 1,024, Adam 0.001, seed 42, hidden/latent widths 256/128, four 256-entry codebooks, beta 0.25, behavior weight 0.05. The behavior weight is not tuned. B/C use the same value, and tokenizers are selected by reconstruction loss. GenRec training and checkpoint selection are unchanged.
 
 ## Run from the repository root
 
@@ -51,12 +35,7 @@ python -m scripts.train_sid_ablation --variant B --behavior-weight 0.05
 python -m scripts.train_sid_ablation --variant C --behavior-weight 0.05
 ```
 
-Export enforces unique fourth-level codes within each `[c1,c2,c3]` bucket.
-It computes each item's residual after subtracting its first three codewords,
-then solves a minimum-cost bipartite assignment using squared distances to the
-fourth codebook. The first three codes remain fixed. Matching covers every item
-in a bucket with collisions; already-unique nearest-code assignments are optimal
-and can be kept. This same export policy applies to A, B and C.
+Export gives items in each `[c1,c2,c3]` bucket distinct fourth codes. It keeps the first three codes fixed and minimizes squared residual-to-codeword distance through bipartite matching. An already-unique nearest-code assignment needs no change.
 
 A bucket larger than 256 items cannot receive distinct codes from a 256-entry
 fourth codebook. Export stops with the offending prefix and size in this case.
@@ -105,6 +84,4 @@ Survival uses all targets in the group and is measured after each beam pruning,
 before seen-item filtering. Top-10 is measured after filtering. Catalog prefix
 counts make it explicit when beam 100 retains every first branch.
 
-The full-SID column means three semantic tokens plus collision for Current,
-and four semantic tokens for A/B/C. Early target loss locates pruning; it does
-not, by itself, establish which training or tokenizer choice caused it.
+For Current, “full SID” means three RQ tokens plus a collision suffix; for A/B/C it means four RQ tokens. Early prefix loss locates pruning but does not, alone, identify its cause.

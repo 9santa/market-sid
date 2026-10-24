@@ -2,17 +2,7 @@
 
 [Notebook index](../README.md) · [Interpretations](../research_log.md) · [Earlier experiments](../archive.md)
 
-Snapshot reviewed 2026-09-19. Tables below are transcribed programmatically from existing JSON artifacts; no model evaluation was rerun. Rates and NDCG are shown as percentages unless marked otherwise. Top-10 hit counts are `round(n × recall@10)`. Source links point to local, generally Git-ignored artifacts; the important values are retained here.
-
-Jump to: [SID comparison](#main-sid-comparison) ·
-[Tokenizer exports](#tokenizer-structure-and-export) ·
-[Path likelihood](#path-likelihood-and-history-sensitivity) ·
-[Decoding interventions](#decoding-interventions) ·
-[Other datasets](#separate-benchmarks).
-
-The [baseline Recall@20 ledger](baseline_development.md#retained-run-ledger)
-uses fractions and warm targets; it is kept separate from these full-population
-generative-retrieval tables. For example, 0.030925 there means 3.0925%.
+The [baseline Recall@20 runs](baseline_development.md#retained-run-ledger) use fractions and warm targets. For example, 0.030925 there is 3.0925%; those scores are not the full-catalog GenRec results below.
 
 ## Main SID comparison
 
@@ -25,7 +15,6 @@ All five saved evaluations use the main test population (80,471 users), the full
 | rq4_a | 2.2182 | 1.1925 | 3.3105 | 5.3311 | 17 |
 | rq4_b | 2.2107 | 1.1921 | 3.3416 | 5.2255 | 19 |
 | rq4_c | 2.2604 | 1.1886 | 3.4000 | 5.3411 | 13 |
-
 
 `content`: BGE + 3 RQ + collision; `twotower`: Two-Tower + 3 RQ + collision. `rq4_a`: Two-Tower + 4 RQ; `rq4_b`: BGE + final-depth Two-Tower supervision; `rq4_c`: BGE + all-depth Two-Tower supervision. See [the ablation protocol](../protocols/sid_ablation.md).
 
@@ -129,7 +118,6 @@ Content/Industrial prefix counts were recomputed from saved SID arrays during th
 | rq4_c | 80 | 15307 | 105042 | 134288 | Yes |
 | Industrial | 66 | 6466 | 17667 | 25848 | Yes |
 
-
 Four-RQ export uses unique minimum-cost fourth assignments inside fixed three-code buckets. “Raw collision rate” is `1 − unique full codes / items`, not the fraction of items belonging to a collision bucket. Added squared error is measured in each tokenizer’s own latent space; do not compare its absolute scale across tokenizers as recommendation quality.
 
 | Variant / source | Raw collision % | Largest 3-code bucket | Changed fourth codes | Extra squared error / item | Final collision % |
@@ -161,7 +149,6 @@ Source: [genrec_twotower_C_test_path_diagnostics.json](../../../artifacts/main/d
 | tail | 33742 | -4.6666 | -5.1333 | -5.3120 | -0.4498 | -15.5616 |
 | unseen | 6292 | -4.7574 | -5.2742 | -5.9006 | -0.5506 | -16.4828 |
 
-
 Positions 2+3 contribute **93.98%** of the mean head–tail full-path log-probability difference. Position 1 accounts for **87.64%** of the mean real-minus-shuffled benefit. These are descriptive decompositions, not causal attribution.
 
 | Group | Real − shuffled c1 | c2 | c3 | c4 |
@@ -171,7 +158,6 @@ Positions 2+3 contribute **93.98%** of the mean head–tail full-path log-probab
 | mid | 1.4273 | 0.1063 | 0.0734 | 0.0055 |
 | tail | 1.6365 | 0.1118 | 0.0584 | 0.0049 |
 | unseen | 1.5234 | 0.1448 | 0.0955 | 0.0126 |
-
 
 Correlations over all target rows (Spearman). Marginal token counts ignore parent prefixes; conditional priors do not. Conditional-prior correlations were recomputed from the saved Parquet rows; the others are stored in the diagnostic JSON.
 
@@ -192,7 +178,6 @@ For target rows whose catalog c1,c2 prefix has exactly one c3 child, the sole va
 | mid | 2026 | 17.2204 |
 | tail | 4046 | 2.9898 |
 | unseen | 817 | 1.4354 |
-
 
 Computed by joining catalog singleton parents to the saved teacher-forced diagnostic rows. This is a target-frequency-weighted mean, not an equal-parent mean. Reproduction definitions and source hashes: [derived statistics](../../../artifacts/main/derived/derived_statistics.json).
 
@@ -226,7 +211,6 @@ Validation source: [genrec_twotower_C_valid_prior_sweep_levels2.json](../../../a
 | 0.3 | 2.5910 | 1.3935 | 6.3277 | 2052 | 27 | 4 | 2 |
 | 0.5 | 2.2766 | 1.2238 | 5.7313 | 1790 | 33 | 7 | 2 |
 
-
 Alpha zero has the best aggregate validation R@10 and NDCG@10 in both grids. Nonzero corrections are trade-off experiments, not aggregate winners.
 
 ### Normalization and correction summaries
@@ -239,9 +223,7 @@ Alpha zero has the best aggregate validation R@10 and NDCG@10 in both grids. Non
 | test | Trie normalized, alpha 0 | 2.3822 | 1.2537 | 5.5970 | 1917 | 39 |
 | test | Full vocabulary, alpha 0.5 all levels | 1.8317 | 0.9704 | 4.6402 | 1474 | 53 |
 
-
 Sources: [genrec_twotower_C_valid_prefix_survival_trie_normalized_metrics.json](../../../artifacts/main/evaluation/genrec_twotower_C_valid_prefix_survival_trie_normalized_metrics.json), [genrec_twotower_C_test_prefix_survival_trie_normalized_metrics.json](../../../artifacts/main/evaluation/genrec_twotower_C_test_prefix_survival_trie_normalized_metrics.json), [genrec_twotower_C_test_prior_alpha0.5.json](../../../artifacts/main/diagnostics/decoding/genrec_twotower_C_test_prior_alpha0.5.json). Baselines are the validation alpha-zero sweep row and the test Two-Tower prefix-survival file.
-
 
 Test group comparison (R@10 in percent; counts in parentheses):
 
@@ -252,7 +234,6 @@ Test group comparison (R@10 in percent; counts in parentheses):
 | tail | 0.0000 (0) | 0.0148 (5) | 0.0326 (11) |
 | unseen | 0.0000 (0) | 0.0318 (2) | 0.1430 (9) |
 
-
 Trie-normalized test prefix survival:
 
 | Group | n | Prefix 1 % | Prefix 2 % | Prefix 3 % | Full SID % | R@10 % | Top-10 hits |
@@ -262,7 +243,6 @@ Trie-normalized test prefix survival:
 | mid | 19141 | 84.8441 | 16.1225 | 4.1429 | 1.7136 | 0.1672 | 32 |
 | tail | 33742 | 81.9039 | 11.3538 | 1.3188 | 0.2964 | 0.0148 | 5 |
 | unseen | 6292 | 80.2130 | 10.5531 | 0.8582 | 0.2066 | 0.0318 | 2 |
-
 
 Validation aggregate metrics slightly favor full-vocabulary normalization. Equal test R@10 does not mean identical rankings: 22 fewer head hits are balanced by 22 additional non-head hits. Test NDCG@10 and R@50 decline slightly. No confidence intervals were saved.
 
@@ -295,6 +275,5 @@ This is the original 50,984-user diagnostic discussed in the project. Source: [g
 | mid | 28.4843 | 34.9361 | 25.1613 |
 | tail | 21.7648 | 28.4155 | 10.5263 |
 | unseen | 31.3253 | 31.7308 | 18.1818 |
-
 
 The current saved Industrial SID array has 25,848 items and 66 root codes; beam 100 retains every first-level branch. MovieLens has only 11 tail and 2 unseen test targets under these thresholds. Beauty’s 10-user zero-hit smoke output is not evidence about converged quality.

@@ -1,12 +1,10 @@
-# Documentation
+# Docs
 
-- [Project README](../README.md): setup, models, and runnable pipelines.
-- [Repository layout](repository_layout.md): output directories and historical path migration.
-- [Research notebook](experiments/README.md): hypotheses and current evidence.
-- [Research log](experiments/research_log.md): how the investigation developed.
-- [Results overview](experiments/results/overview.md): main SID comparisons and benchmark results.
-- [Project review](experiments/reviews/project_review_20261017.md): limitations and completion plan.
+- [README](../README.md) — setup, training, and evaluation
+- [File layout](repository_layout.md) — where outputs are stored
+- [Research notebook](experiments/README.md) — experiments and main findings
+- [Research log](experiments/research_log.md) — what was tried and why
+- [Results](experiments/results/overview.md) — SID comparisons and benchmarks
+- [Project review](experiments/reviews/project_review_20261017.md) — gaps and next steps
 
-Experiment commands belong in `experiments/protocols/`; human-written analyses in
-`experiments/results/`. Generated reports and raw measurements belong in the root
-`artifacts/` directory. The notebook links each interpretation to its evidence.
+Protocols are in `experiments/protocols/`, interpreted results in `experiments/results/`, and raw outputs in `../artifacts/`.

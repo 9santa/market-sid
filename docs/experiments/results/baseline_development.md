@@ -3,22 +3,13 @@
 [Notebook index](../README.md) · [Later research](../research_log.md) ·
 [Archived results](../archive.md) · [Machine-readable evidence](../../../artifacts/main/derived/baseline_evidence.json)
 
-Reviewed **2026-09-19**. This chapter preserves the September 8 discussion and
-reconciles it with the surviving histories and current implementation. It fills
-in the baseline work preceding the SID experiments. No model was trained or
-re-evaluated to write this chapter.
+Reviewed 2026-09-19 from saved histories and the September 8 notes. No models were retrained or re-evaluated.
 
-**Metric convention:** this page uses fractions: `0.03 = 3%`. The other notebook
-results tables generally use percentages. Unless stated otherwise, baseline
-Recall@20 uses warm candidates and warm targets. It is not interchangeable with
-GenRec Recall@10 over every target and full-catalog beam search.
+**Units:** this page reports fractions (`0.03 = 3%`). Baseline Recall@20 is usually for warm targets and warm candidate items. It cannot be compared directly with full-catalog GenRec Recall@10.
 
 ## Objective and status
 
-The user's quality target was **Recall@20 ≥ 0.10**, starting from approximately
-0.03 for the content Two-Tower. The completed baseline runs here do not reach it.
-The largest saved validation selection score is 0.037466; its warm-target test
-Recall@20 is 0.030925. These are different splits, not two estimates of one score.
+The original goal was **Recall@20 ≥ 0.10**, starting near 0.03 for content Two-Tower. The retained runs missed it: best recorded validation score 0.037466, with warm-target test Recall@20 of 0.030925 on that run.
 
 | ID | Hypothesis / question | Evidence and current interpretation |
 |---|---|---|
@@ -29,13 +20,10 @@ Recall@20 is 0.030925. These are different splits, not two estimates of one scor
 | B05 | More negatives / a different ranking objective improves retrieval | Both current baselines use 64 negatives; no isolated 64/256/1,024-negative sweep recovered |
 | B06 | A learned item residual can complement content features | Proposed for Two-Tower; no attributable baseline experiment recovered |
 | B07 | More training users for the retained catalog improve sparse items | Proposed; no controlled data-expansion experiment recovered |
-| B08 | CPU preparation and synchronization cause GPU idle time | Loader benchmark supports preparation overhead; user reported utilization increasing to 99%; no matched full training speedup measured |
+| B08 | CPU preparation and synchronization cause GPU idle time | Loader benchmark supports preparation overhead; reported utilization increased to 99%; no matched full training speedup measured |
 | B09 | Durable histories make comparisons and plots possible | Implemented for both baselines; timestamped histories retain config, epochs, and final metrics |
 
-Use **Measured** for retained artifacts or calculations; **Recorded** for output
-preserved only in the discussion; **Implemented** for current code; **Proposed**
-for untested ideas; and **Interpretation** for explanations. A suggested setting
-is not a completed experiment, and an interrupted run is not a failed hypothesis.
+Status labels distinguish saved measurements, discussion-only numbers, implemented code, and untested proposals. An interrupted or suggested run is not a completed result.
 
 ## Dataset and assumptions
 
@@ -189,7 +177,7 @@ each evaluation at 512 users.
 ### What the capacity suggestions actually established
 
 The first suggestion was a smaller model because histories and item counts were
-sparse. The user challenged that inference. Sparse data and decreasing training
+sparse. That inference was challenged. Sparse data and decreasing training
 loss alone did not establish an overcapacity bottleneck, especially before
 evaluation was repaired. Later width runs provide mixed empirical evidence, not
 a universal rule that smaller or larger models win.
@@ -248,7 +236,7 @@ Their reported gains are external evidence, not measured gains for this project.
 
 ## B08 — GPU throughput
 
-**Recorded setting.** RTX 3070 Ti, 8 GiB VRAM, eight logical CPUs. The user observed
+**Recorded setting.** RTX 3070 Ti, 8 GiB VRAM, eight logical CPUs. Reported measurements showed
 30–40% GPU utilization and roughly 30% VRAM occupancy. The original dataset ran
 NumPy RNG creation, rejection sampling, and tensor construction synchronously
 with `num_workers=0`; every training batch also called `loss.item()`.
@@ -271,7 +259,7 @@ establish a 2.38× end-to-end training speedup.
 dataset copies. Also propose accumulating detached loss on the GPU and converting
 to a Python scalar once per epoch, rather than synchronizing every batch.
 
-**Recorded result.** After making both changes, the user reported **99% GPU
+**Recorded result.** After making both changes, a follow-up report gave **99% GPU
 utilization and 45% VRAM occupancy**. No matched before/after examples-per-second
 or epoch-time measurement was retained. The report supports reduced idle time,
 not proof of fully saturated compute or a precise speedup. GPU utilization

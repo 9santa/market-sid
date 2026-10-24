@@ -1,12 +1,12 @@
 # When prefix restriction helps rare targets — 2026-10-18
 
-Sources: [full-TT control analysis](full_tt_control_20261018.md), [per-user derived statistics](../../../artifacts/main/derived/prefix_conditions_20261018_statistics.json). This is an offline analysis of the existing 80,471-user validation run; no inference or training was performed.
+Sources: [full-TT analysis](full_tt_control_20261018.md) and [per-user statistics](../../../artifacts/main/derived/prefix_conditions_20261018_statistics.json). This is an offline analysis of 80,471 saved validation predictions, not a new model run.
 
 ## Scope
 
-Compare pure Two-Tower ranking of all catalog items with the SAME scores restricted to expanded GenRec prefixes. These are standalone top-50 lists, not the 5/10-slot quota hybrids. Input hashes and ordered users/targets were verified against current SID and sequence files.
+Compare standalone Two-Tower top-50 with the same item scores restricted to expanded GenRec prefixes (not the quota hybrids). Dataset, SID, user, and target identities were checked.
 
-For a covered target, removing candidates cannot worsen its rank with identical scores and tie-breaking. Rank monotonicity holds for all observed hits shared by full/prefix TT. Consequently, a full-TT hit lost by prefix TT must have been excluded from the prefix candidate pool. This inference would not apply if scores were mixed with prefix probabilities or the ranker changed.
+With identical scores and tie-breaking, filtering candidates cannot lower a covered target's rank. A full-TT hit missing from prefix-TT was therefore excluded by retrieval. This only holds because the ranker is unchanged.
 
 ## Exact retrieval/ranking decomposition
 
@@ -23,7 +23,7 @@ For a covered target, removing candidates cannot worsen its rank with identical 
 | 3 | tail | 380 | 248 | 44 | 76 | 204 | 120 | 260 |
 | 3 | unseen | 41 | 47 | 4 | 7 | 43 | 11 | 30 |
 
-For depth-2 tail: 248 full-TT hits − 101 excluded hits + 63 rescued hits = 210 prefix-TT hits. For unseen: 47 − 27 + 7 = 27. Prefix restriction genuinely rescues some rare targets, but exclusions cost more. At depth 3 the corresponding rescue/loss counts are 76/204 for tail and 7/43 for unseen.
+At depth 2, tail hits go from 248 to 210: 101 excluded, 63 rescued. Unseen goes from 47 to 27: 27 excluded, 7 rescued. Depth 3 also loses more than it rescues (tail: 204 lost/76 rescued; unseen: 43/7).
 
 Depth-2 ranking converts only 210/3785 = 5.55% of covered tail targets and 27/484 = 5.58% of covered unseen targets to hits. Thus both candidate selection and ranking are bottlenecks. Depth-3 conditional recall is higher (tail 120/380 = 31.58%; unseen 11/41 = 26.83%), but much less coverage makes its total recall worse. The changed candidate populations prevent treating those conditional rates as isolated improvements to the scorer.
 
@@ -63,7 +63,7 @@ History-length strata 2–4, 5–9, and 10+ do not reverse the negative aggregat
 
 ## Interpretation and limits
 
-The results support a bounded mechanism: useful prefix selection can remove competitors and rescue targets, particularly when other products in the same prefix have training support. However, weakly supported prefixes exclude many rare targets, and most covered rare targets still rank below top-50. This can explain why positive coarse coverage does not produce a rare-item advantage over full-catalog Content Two-Tower. It does not establish that support alone causes the benefit or that semantic transfer is its sole mechanism.
+Prefixes can rescue a target by removing better-ranked competitors, particularly when nearby items have training support. But weak prefixes also exclude rare items, and most covered rare targets still miss top 50. That helps explain why history-sensitive prefix coverage has not improved rare-item recall over full-catalog Two-Tower.
 
 The semantic-assignment permutation control separately supports learned assignment utility for GenRec C. It cannot be used to attribute every stratified effect here to pure text semantics: the tokenizer is Two-Tower-derived, and the permutation changes both input and output correspondence.
 

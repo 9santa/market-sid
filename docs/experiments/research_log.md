@@ -2,21 +2,13 @@
 
 [Notebook index](README.md) · [Numerical results](results/overview.md) · [Archived work](archive.md)
 
-This log follows the reasoning sequence, rather than assigning invented dates
-to every experiment. Dated training histories exist for some runs; several older
-outputs have only filenames. Evidence was reviewed on 2026-09-19. No training or
-full recommendation evaluation was rerun to produce this documentation.
+Experiments are ordered by question, not assigned guessed dates. Some older results survive only as filenames. The underlying evidence was reviewed on 2026-09-19; this log did not require new training or evaluation.
 
 ## 1. Objective and assumptions
 
-The intended setting is a changing marketplace catalog. Product metadata should
-allow an item to receive a useful representation even without its own training
-interactions. GenRec predicts a semantic item ID autoregressively instead of
-scoring an independent learned item-ID embedding for every catalog item.
+The target is a marketplace catalog where metadata is available even for products without training interactions. GenRec predicts semantic IDs from browsing history instead of keeping a separate learned embedding for every item.
 
-This motivates the pipeline `metadata → BGE → tokenizer → SID → GenRec`, but
-does not establish cold-start recommendation quality. Being able to encode or
-generate an item is weaker than ranking the correct item in the top 10.
+The pipeline is `metadata → BGE → tokenizer → SID → GenRec`. Encoding an unseen item is possible; getting that item into top-k recommendations is a different problem.
 
 ### Evaluation contract
 
@@ -29,7 +21,7 @@ generate an item is weaker than ranking the correct item in the top 10.
   and catalog construction use the retained dataset before splitting.
 - Tokenizers see metadata for the full retained catalog. The Two-Tower teacher
   learns from training interactions and supplies content-based vectors for all
-  catalog items. “Unseen” means zero **training interactions**, not metadata that
+  catalog items. “Unseen” means zero **training interactions**, not items/metadata that
   first appeared after model training. Dynamic insertion has not been evaluated.
 - Popularity groups use all training interactions: head >20, mid 6–20, tail 1–5,
   unseen 0. These are absolute thresholds, not equal-size quantiles. A warm item
@@ -39,23 +31,14 @@ generate an item is weaker than ranking the correct item in the top 10.
   evaluation negatives, but not exhaustive exact ranking. Filtering may leave
   fewer than 50 recommendations. The main pipeline and benchmark pipelines have
   different duplicate/metadata filtering; see their READMEs.
-- Recall@K has one held-out target per user, so it is also the hit rate. All
-  percentage tables multiply stored metric fractions by 100. A zero tail R@10
-  means no hits in that run, not that every tail item is impossible to generate.
+- Recall@K has one held-out target per user, so it is also the hit rate. A zero tail R@10
+  means no hits in that run, not that tail item is impossible to generate.
 
 ### Comparability rules
 
-Keep population, split, mappings, SIDs, checkpoint, candidate catalog, beam width,
-seen filtering, and score normalization explicit. The Industrial table with
-50,984 targets is **not** an earlier main-dataset baseline for the 80,471-target
-tables. Full test results, first-N smoke results, and random validation subsets
-must not be interchanged.
+Comparisons need the same split, users, catalog, IDs, checkpoint, beam width, filtering, and score normalization. In particular, the Industrial result with 50,984 targets is not a baseline for the 80,471-user main dataset. Smoke, subset, validation, and test results must stay distinct.
 
-Most experiments use one seed. There are no uncertainty intervals or repeated-seed
-confirmations here. Many hypotheses were developed after inspecting test results;
-the accumulated test results are exploratory evidence, not an untouched final
-confirmation set. Future tuning should use validation and a clearly fixed final
-evaluation protocol.
+Most results use one randomization seed and lack confidence intervals. Test data informed some early hypotheses, so treat these findings as exploratory; select future models on validation and reserve a fixed final test.
 
 ## 2. Baselines, implementation, and hyperparameters — H01–H03
 
@@ -74,17 +57,15 @@ SID-token cross-entropy. Training negatives are not the evaluation catalog.
 
 Saved baseline histories include dimension, layer-count, history-length, and
 batch-size variations. Larger dimensions did not consistently help. The full
-tables and interrupted runs are in [the archive](archive.md#baseline-hyperparameter-runs).
+tables and runs are in [the archive](archive.md#baseline-hyperparameter-runs).
 In particular, a run with a lower validation selection score is not automatically
 the teacher used later: the exported Two-Tower metadata identifies the actual
 teacher as the 128-dimensional, three-layer, epoch-35 checkpoint.
 
-**Text encoder hypothesis (proposed).** A stronger initial embedding model or more
-retained item text might improve semantic coverage. The current cache records
-BGE-small, 384 **dimensions**, and a 512-**token** limit. The earlier suggestion
-that “384” was the token limit mixed up dimensions and context length. Text also
-passes through preprocessing truncation. No controlled stronger-encoder or
-longer-context result was recovered, so this direction is neither validated nor
+**Text encoder hypothesis (considered).** A stronger initial embedding model or more
+retained item text might improve semantic coverage. The current setup records
+BGE-small, 384 **dimensions**, and a 512-**token** limit. Text also
+passes through preprocessing truncation. This direction is neither validated nor
 ruled out. It would require new embeddings, tokenizer training, SIDs, and GenRec.
 
 **Embedding variants (implemented).** GenRec A learns semantic embeddings from
@@ -94,24 +75,13 @@ experiments fix **GenRec C**. The separate SID ablation A/B/C labels do not sele
 these architecture variants. Older unlabelled GenRec histories cannot reliably
 be mapped back to an A/B/C/D leaderboard.
 
-### Engineering issues that must not become scientific conclusions
-
-The discussion records memory/process-start failures, an RQ shape-validation
-error, decoder-input questions, and checkpoint incompatibilities. These motivated
-safer training entry points, compact prefix datasets, consistent SID loading,
-and checkpoint metadata. The `norm_first=True` nested-tensor warning was distinct
-from the multiprocessing failure.
+### Decoder input
 
 Current decoder inputs are `[BOS, c1, c2, c3]` for targets `[c1,c2,c3,c4]`, with
 the previous token embedded using its own level's codebook and a causal mask.
 Current evaluation rebuilds nonpersistent item SIDs from the matching file and
 restores semantic-output configuration. Numeric code 42 from two tokenizers is
 not the same vector: source-specific SID/RQ/GenRec files must stay paired.
-
-The conversation refers to “four issues” without preserving their complete list.
-This log does not invent that missing list or attribute a numerical gain to a fix
-without a matched before/after run. Source implementation is evidence of present
-behavior, not proof of which revision produced an older result.
 
 ## 3. SVD behavior-aware tokenization — H04
 
@@ -190,7 +160,7 @@ This made the arbitrary collision suffix look like a major bottleneck.
 100 can keep all of them, explaining 100% first-position survival without
 requiring perfect ranking. Main Two-Tower has 256 root children and 84.28%
 first-position survival. Four-RQ B/C have only 73/80 root children and therefore
-also get 100% at position 1 with beam 100. These counts are now documented.
+also get 100% at position 1 with beam 100.
 
 **Correction to the early interpretation.** Survival loss at position 4 does not
 isolate the quality of the fourth token. Beam search globally compares cumulative
@@ -209,8 +179,7 @@ insufficient beam width. See [archived diagnostics](archive.md).
 
 **Prediction before the run.** Replacing `[c1,c2,c3,collision]` with four semantic
 codes might preserve meaningful final refinements and raise tail full-SID survival
-without extending the autoregressive sequence. The discussed “tail full survival
-could rise from 0.65% to 3–5%” was an illustrative expectation, not a result.
+without extending the autoregressive sequence.
 
 **Uniqueness.** Four RQ codes can still collide. During export, fix the first three
 codes and match items within each bucket to distinct fourth-level codewords:
@@ -234,12 +203,9 @@ collision model; it is not a surgical replacement of only c4 with frozen c1–c3
 **Measured result.** Raw collision rate 3.15% became zero; the largest three-code
 bucket had 49 items; 4,342 fourth assignments changed. But R@10 fell from 2.3822%
 to 2.2182%. Tail full survival fell from 0.1956% to 0.0682%, and unseen full
-survival became zero. The hoped-for gain did not appear in this run.
+survival became zero. The hoped-for gain did not appear.
 
-**Decision.** Keep the uniqueness method as an implemented mechanism; do not
-claim it improved recommendation. Added items may require rematching their bucket,
-so stable online SID insertion remains unresolved. Independent assignment quality
-and retrieval quality are separate questions.
+**Decision.** Keep the 4 learned codes with uniqueness export as an experiment, but stick with three learned codes and a fourth collision suffix.
 
 ## 7. Semantic reconstruction plus behavioral supervision — H08
 
@@ -289,7 +255,7 @@ permutation. The diagnostic uses full-vocabulary softmax without trie normalizat
 `[-4.667, -5.133, -5.312, -0.450]`. Positions 2 and 3 account for about **94%**
 of the difference in mean head versus tail full-path log probability. The fourth
 position's average gap is comparatively small. This weakens the claim that the
-collision token alone explains the main dataset's failure.
+collision token alone explains the main dataset's struggle.
 
 About **88%** of the total mean real-minus-shuffled log-probability benefit occurs
 at c1. The conditional empirical log prior and model token log probability have
@@ -318,7 +284,7 @@ $$
 `K` is the number of catalog-valid children. Counts come from the 574,699 training
 targets. Unseen legal paths receive finite smoothed priors. Correction happens
 before pruning, not just when reranking final beams; corrected scores are not
-normalized probabilities. Alpha zero is the uncorrected baseline.
+normalized probabilities. Alpha=0 is the uncorrected baseline.
 
 **All-level sweep.** Validation alpha values were 0, 0.05, 0.1, 0.2, 0.3, and 0.5.
 Every nonzero value reduced aggregate R@10 and NDCG@10 relative to alpha zero.
@@ -415,9 +381,4 @@ available implementation evidence differ from the current SID ablation.
    evaluation protocol, inspect seen-target eligibility, and test SID stability for
    actual catalog additions before making dynamic-catalog claims.
 
-The present evidence supports a narrower conclusion than several early proposals:
-SID design changes routing, but neither four-RQ uniqueness nor the tried behavioral
-losses eliminated the popularity gap. Path-score diagnostics exposed a further
-issue, and decoding interventions recovered some rare hits without delivering a
-clear aggregate validation gain. The next experiment should state which part of
-that claim it intends to test.
+SID choices change routing, but four-code uniqueness and the tested behavioral losses did not close the popularity gap. Path-score diagnostics exposed another issue; decoding changes recovered a few rare hits at the cost of aggregate quality. New experiments should isolate one explanation at a time.

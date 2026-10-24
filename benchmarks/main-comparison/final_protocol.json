@@ -1,0 +1,133 @@
+{
+    "id": "amazon-new-users-v1",
+    "status": "freeze before preparing data; no outcome-dependent edits",
+    "categories": [
+        "Electronics",
+        "Cell_Phones_and_Accessories",
+        "Office_Products"
+    ],
+    "dataset_revision": "2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e",
+    "split": "new-user-cohort; chronological per-user leave-two-out",
+    "split_seed": 20261021,
+    "max_users": 100000,
+    "min_user_interactions": 5,
+    "max_user_interactions": 200,
+    "min_item_interactions": 2,
+    "selection_metric": "recall@50",
+    "epochs": 50,
+    "patience": 5,
+    "max_len": 50,
+    "beam_size": 100,
+    "seeds": [
+        42,
+        43,
+        44
+    ],
+    "models": [
+        "itemknn",
+        "gru4rec",
+        "lightgcn",
+        "sasrec",
+        "two_tower",
+        "genrec",
+        "tiger"
+    ],
+    "sid_sources": [
+        "content",
+        "twotower"
+    ],
+    "tokenizer_seed": 42,
+    "tokenizer_epochs": 30,
+    "teacher_seed": 42,
+    "primary_comparison": "genrec_twotower vs two_tower",
+    "secondary_comparison": "genrec_content vs tiger_content; all baselines",
+    "tuning": "one frozen configuration per model; no new search on this cohort",
+    "training_configs": {
+        "itemknn": {
+            "neighbors": 100,
+            "shrink": 0.0
+        },
+        "gru4rec": {
+            "d_model": 128,
+            "n_layers": 1,
+            "batch_size": 256,
+            "lr": 0.001,
+            "amp": true
+        },
+        "lightgcn": {
+            "d_model": 64,
+            "n_layers": 3,
+            "batch_size": 2048,
+            "lr": 0.001,
+            "weight_decay": 0.0,
+            "reg_weight": 0.0001
+        },
+        "sasrec": {
+            "d_model": 64,
+            "n_heads": 4,
+            "n_layers": 3,
+            "batch_size": 1024,
+            "lr": 0.001,
+            "dropout": 0.2,
+            "amp": true
+        },
+        "two_tower": {
+            "d_model": 128,
+            "n_heads": 4,
+            "n_layers": 3,
+            "batch_size": 2048,
+            "lr": 0.0003,
+            "temperature": 0.1,
+            "dropout": 0.2,
+            "amp": true
+        },
+        "genrec": {
+            "d_model": 128,
+            "n_heads": 4,
+            "n_layers": 3,
+            "decoder_layers": 2,
+            "batch_size": 2048,
+            "lr": 0.0003,
+            "dropout": 0.2,
+            "amp": true
+        },
+        "tiger": {
+            "d_model": 128,
+            "n_heads": 6,
+            "n_layers": 4,
+            "decoder_layers": 4,
+            "batch_size": 128,
+            "lr": 0.0003,
+            "d_kv": 64,
+            "d_ff": 1024,
+            "user_buckets": 2000,
+            "amp": true
+        }
+    },
+    "common_training": {
+        "dropout": 0.1,
+        "weight_decay": 0.0001,
+        "amp": false
+    },
+    "catalog": "all items in the frozen cohort; metadata available, including interaction-unseen items",
+    "groups": {
+        "unseen": "train count = 0",
+        "tail": "1..5",
+        "mid": "6..20",
+        "head": ">20"
+    },
+    "secondary_metrics": [
+        "recall@10",
+        "ndcg@10",
+        "recall@20",
+        "ndcg@20",
+        "ndcg@50",
+        "head/mid/tail/unseen recall@50"
+    ],
+    "test_policy": "freeze checkpoint hashes for all seeds/conditions before test; no test-based model selection",
+    "metadata_revisions": {
+        "Electronics": "2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e",
+        "Cell_Phones_and_Accessories": "2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e",
+        "Office_Products": "b7ac094bf775b1ae467e61a98d343207e826c4e6"
+    }
+}

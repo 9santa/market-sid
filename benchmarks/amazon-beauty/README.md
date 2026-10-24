@@ -1,9 +1,8 @@
 # Amazon Reviews 2023: Beauty and Personal Care
 
-GenRec benchmark for **Beauty_and_Personal_Care**, not `All_Beauty` or Amazon 2014.
-The source is the official [Amazon Reviews 2023 dataset](https://amazon-reviews-2023.github.io/).
+GenRec benchmark using `Beauty_and_Personal_Care` from [Amazon Reviews 2023](https://amazon-reviews-2023.github.io/), not `All_Beauty` or Amazon 2014.
 
-Run from the repository root with the existing Python environment:
+From the repository root:
 
 ```bash
 python benchmarks/amazon-beauty/preprocess.py
@@ -12,15 +11,11 @@ python benchmarks/amazon-beauty/train.py --variant C
 python benchmarks/amazon-beauty/evaluate.py --split test --beam-size 200 --batch-size 64
 ```
 
-Data and model weights stay in this benchmark directory. Results are saved in
-`artifacts/benchmarks/amazon-beauty/`: `training/` for histories and `evaluation/`
-for metrics. These generated files are ignored by Git. No new dependencies are needed.
-Use `--history-dir` to override the history directory separately from `--checkpoint-dir`.
-Downloads use the existing Hugging Face cache.
+Data and weights stay here; metrics and histories go under `artifacts/benchmarks/amazon-beauty/`. Generated files are Git-ignored. Use `--history-dir` to change where histories go.
 
 ## Preprocessing
 
-The pipeline follows the other Amazon categories in this repository:
+The pipeline uses the same stages as the other Amazon benchmarks:
 
 - Download the official **5-core rating-only** CSV. All rating values count as
   implicit interactions; review text is not used.
@@ -35,9 +30,7 @@ The pipeline follows the other Amazon categories in this repository:
   the final event is test. All earlier events are training data.
 - Assign sorted item IDs starting at 1; 0 is reserved for PAD.
 
-This uses a per-user split, not a global temporal cutoff. K-core filtering is done
-before splitting, as in the existing Amazon pipeline. The retained catalog includes
-held-out items. Head/mid/tail/unseen counts are computed from **training events only**.
+The split is chronological within each user, after k-core filtering; it is not a global calendar cutoff. The catalog retains held-out items. Head/mid/tail/unseen groups use training interactions only.
 
 Metadata Parquet files are pinned to revision
 `b7ac094bf775b1ae467e61a98d343207e826c4e6`, where this category is available in Parquet.

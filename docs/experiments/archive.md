@@ -2,23 +2,15 @@
 
 [Notebook index](README.md) · [Research log](research_log.md) · [Main results](results/overview.md)
 
-This file preserves work that predates or lies outside the current SID comparison. “Archived” describes evidence and implementation availability, not a claimed execution date. Artifact labels are retained even where their original runners are absent. Rates/NDCG are percentages.
+Older experiments and side branches are collected here. Some runners are no longer available; original artifact names are kept. Metrics are percentages.
 
 ## Baseline hyperparameter runs
 
-For the original hypotheses, correctness fixes, training-system changes, and
-**Recall@20** tables, read [baseline development](results/baseline_development.md).
-The tables below retain this archive's percentage convention and R@10 view.
+The [baseline development notes](results/baseline_development.md) cover early debugging and Recall@20 results. This page mostly uses R@10.
 
-Sources are timestamped histories from 2026-09-08. Both baselines select by validation **warm-target Recall@20**. “Complete” below means a finish timestamp and saved test metrics; it does not prove that all planned epochs ran. Missing training-strategy metadata is left unspecified. Changing several settings at once is not a single-factor ablation.
+The baseline histories are dated 2026-09-08. Both models were selected using validation warm-target Recall@20. A recorded finish and test metric mark a run as complete but do not guarantee all planned epochs ran. Missing training settings remain unspecified.
 
-“Test all” means the metric over all target groups, not necessarily all-catalog
-candidates. The current SASRec training runner evaluates only warm candidate IDs;
-its older histories do not independently record the candidate catalog. Two-Tower
-saves both candidate modes, and the table explicitly reads its **all-catalog**
-metrics. The current validation runners use warm candidates. Do not treat these
-two history tables as a candidate-matched cross-model leaderboard. The separately
-recorded RecBole comparison below explicitly specifies full-catalog evaluation.
+“Test all” includes all target groups but not necessarily all catalog candidates. Older SASRec runs do not log candidate IDs; the current runner uses warm candidates. Two-Tower saves warm and full-catalog metrics, and the table uses the full catalog. These are not candidate-matched leaderboard scores.
 
 Across these saved configurations, SASRec learning rate is 0.001 and Two-Tower
 learning rate is 0.0003; both use dropout 0.2, weight decay 0.0001, and seed 42.
@@ -51,10 +43,9 @@ Full recorded configurations are preserved in the evidence manifest.
 | [131458161044](../../artifacts/main/training/two_tower_history_20260908T131458161044Z.json) | 64 | 2 | 50 | 2048 | all_prefixes | complete | 6 | 3.2189 | 1.6428 |
 | [131904621494](../../artifacts/main/training/two_tower_history_20260908T131904621494Z.json) | 128 | 3 | 50 | 2048 | all_prefixes | complete | 35 | 3.4558 | 1.8640 |
 
+SASRec dimension 64/128/256 runs do not show a monotonic benefit. Later all-prefix runs improve the recorded validation selection score, but architecture and history settings also differ.
 
-SASRec dimension 64/128/256 runs do not show a monotonic capacity benefit. Later all-prefix runs improve the recorded validation selection score, but architecture and history settings also differ. Several history-length experiments have zero completed epochs and no result.
-
-Two-Tower’s 128-dimensional, two-layer, batch-2048 run has the highest saved validation selection score among its completed non-smoke histories. The exported teacher, however, is the later three-layer, epoch-35 checkpoint, as recorded in [item_two_tower_embeddings.json](../../data/processed/item_two_tower_embeddings.json). Do not assume the exported teacher was automatically the best of the tuning runs. The 256-dimensional run stops in the record after seven epochs with no test metrics; it is not a completed negative result.
+Two-Tower’s 128-dimensional, two-layer, batch-2048 run has the highest saved validation selection score among its completed non-smoke histories. The exported teacher, however, is the later three-layer, epoch-35 checkpoint, as recorded in [item_two_tower_embeddings.json](../../data/processed/item_two_tower_embeddings.json).
 
 ## Earlier GenRec histories and limited evaluations
 
@@ -72,13 +63,12 @@ The following older evaluation files differ in population, checkpoint, or proven
 | [genrec_valid_limit10_metrics.json](../../artifacts/main/smoke/genrec_valid_limit10_metrics.json) | 20 | valid | 10 | 200 | 0.0000 | 0.0000 |
 
 
-A discussion-only main Two-Tower table reported R@10 1.2116%, prefix survival 82.84/14.77/5.55/4.13%, and the same output filename later used for R@10 2.3822%. Its standalone JSON was not recovered. The cause of that difference is not established by the transcript or surviving file; do not claim a particular bug fix or tokenizer change caused it. A reused path is not an immutable experiment identity.
 
 ## Exact ranking and decoder performance
 
 [genrec_diagnosis.json](../../artifacts/archive/legacy_main/genrec_diagnosis.json) contains teacher-forced statistics for 1,024 users and exact catalog ranks for 16 selected users (four per popularity group). Across those 16, exact top-50 lists are 99% head, and beam-100 overlap with exact top 50 averages 85.125%. Tail target exact ranks range from 12,378 to 71,828. This supports a score-distribution problem in that sample, beyond approximate search; it does not establish a full-population exact-retrieval comparison. The file lacks checkpoint/split metadata sufficient to promote it to the main baseline.
 
-[decoder_benchmark.json](../../artifacts/archive/genrec_experiments/decoder_benchmark.json) records identical rankings on eight users, maximum score difference 3.70e-6, and 1.1224 s versus 0.0144 s (77.96×) for an old/new decoder comparison. Another 128-user timing sweep increases throughput from 299 to 900 users/s as the recorded decode batch setting increases from 128 to 4,096. Hardware, timing protocol, and the exact old/new source revisions are not fully recorded; these are historical microbenchmarks, not promised present throughput.
+[decoder_benchmark.json](../../artifacts/archive/genrec_experiments/decoder_benchmark.json) records identical rankings on eight users, maximum score difference 3.70e-6, and 1.1224 s versus 0.0144 s (77.96×) for an old/new decoder comparison. Another 128-user timing sweep increases throughput from 299 to 900 users/s as the recorded decode batch setting increases from 128 to 4,096.
 
 ## Fine-tuning and content-adapted trials
 
@@ -91,7 +81,6 @@ These runs use `normalize_valid: true`, batch 512, and selection by validation N
 | [balanced](../../artifacts/archive/genrec_experiments/balanced.json) | 8192 | 0.0001 | recent | False | 5 | 1.4981 | 1.5628 | 2.8931 |
 | [balanced_extended](../../artifacts/archive/genrec_experiments/balanced_extended.json) | 8192 | 0.0001 | recent | False | 10 | 1.5628 | 1.6258 | 3.0762 |
 
-
 `content_adapted` selects epoch 0: no recorded trained epoch improved the selection metric. `balanced`/`balanced_extended` contain `sampling: recent`; their names do not establish inverse-popularity balancing. The extension improves NDCG while validation loss moves from about 2.6318 to 2.6349, illustrating why token loss and retrieval selection can disagree. Different subset sizes make between-row deltas unsuitable as controlled comparisons.
 
 ## Collaborative and directional retrieval trials
@@ -103,7 +92,6 @@ Saved records add 100 train-only neighboring candidates to beam 200 and tune a `
 | [retrieval_tuning](../../artifacts/archive/genrec_experiments/retrieval_tuning.json) | checkpoints/genrec_improved_best.pt | 4.0 | 1.4981 | 1.6888 | 3.0396 |
 | [directional_tuning](../../artifacts/archive/genrec_experiments/directional_tuning.json) | checkpoints/genrec_improved_best.pt | 4.0 | 1.4981 | 1.6891 | 3.0273 |
 | [final_tuning](../../artifacts/archive/genrec_experiments/final_tuning.json) | checkpoints/genrec_best.pt | 4.0 | 1.6256 | 1.8110 | 3.3081 |
-
 
 Settings and memory signatures also survive in `artifacts/archive/retrieval/genrec_retrieval.json`, `genrec_directional_retrieval.json`, and the corresponding memory metadata. A recommendation-list artifact and smoke settings exist, but qualitative examples alone are not an efficacy result.
 
@@ -119,22 +107,19 @@ The [environment artifact](../../artifacts/archive/recbole_benchmark/environment
 | [improved_genrec_neural](../../artifacts/archive/recbole_benchmark/improved_genrec_neural_test.json) | 10000 | 10 | 2.4100 | 1.2746 | 6.0600 |
 | [improved_genrec](../../artifacts/archive/recbole_benchmark/improved_genrec_test.json) | 10000 | 10 | 2.4400 | 1.3271 | 6.3200 |
 
-
 All rows record the same main mapping/sequence fingerprints, but the last two use **10,000 users**, not 80,471. Their saved user indices match each other; thus the neural-versus-augmented comparison is paired on that subset. They cannot be directly ranked against the full-population rows above. The original GenRec row uses an epoch-20 checkpoint and beam 200, not the later epoch-50 content-C baseline.
 
 The augmented subset result is 2.44% R@10 versus 2.41% for its neural checkpoint, with NDCG@10 1.3271% versus 1.2746%. This is a small measured improvement for that recorded configuration, not proof of a general retrieval method or a pure generative result.
 
 ## Evidence gaps and ideas without completed comparisons
 
-- Stronger BGE/alternative encoder and longer text context: proposed; no controlled metrics recovered.
-- Explicit SASRec-teacher tokenization: discussed conceptually; the completed four-RQ teacher is Two-Tower.
-- Depth weights such as 1, 0.5, 0.25: proposed; implemented four-RQ C uses an equal mean.
-- Larger final-only codebook (512/1,024): proposed for oversized buckets; the completed runs use 256 and fit.
-- Seen-aware trie constraints: proposed; current standard evaluation filters after beam search.
+- Stronger BGE/alternative encoder and longer text context was considered.
+- Explicit SASRec-teacher tokenization. The completed four-RQ teacher is Two-Tower.
+- Depth weights such as 1, 0.5, 0.25 were considered; implemented four-RQ C uses an equal mean.
+- Larger final-only codebook (512/1,024) considered for oversized buckets; the completed runs use 256 and fit.
+- Seen-aware trie constraints: considered; current standard evaluation filters *after* beam search.
 - A fifth arbitrary collision token: considered as an alternative, not the selected four-RQ implementation.
-- Main architecture A/B/C/D comparisons: code exists; older unlabelled history files do not support an exact retrospective table.
 - SVD locality figures: discussion reports no improvement, but printed values were not recovered.
 - Beauty: smoke metrics only in this workspace; no recovered full-quality result.
-- Repeated seeds, uncertainty estimates, stable online SID insertion, and a global-time benchmark: not established by the saved experiments.
 
-No new training command is invented for an archived runner that is absent. Use the current runnable protocols only for the current implementations, and preserve any recovered old source before attempting a reproduction.
+No new training command is invented for an archived runner that is absent. Use the current runnable protocols only for the current implementations.

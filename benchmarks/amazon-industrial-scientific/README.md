@@ -1,9 +1,8 @@
 # Amazon Reviews 2023: Industrial and Scientific
 
-GenRec benchmark for **Industrial_and_Scientific** in Amazon Reviews 2023.
-The source is the official [Amazon Reviews 2023 dataset](https://amazon-reviews-2023.github.io/).
+GenRec benchmark using `Industrial_and_Scientific` from [Amazon Reviews 2023](https://amazon-reviews-2023.github.io/).
 
-Run from the repository root with the existing Python environment:
+From the repository root:
 
 ```bash
 python benchmarks/amazon-industrial-scientific/preprocess.py
@@ -12,15 +11,11 @@ python benchmarks/amazon-industrial-scientific/train.py --variant C
 python benchmarks/amazon-industrial-scientific/evaluate.py --split test --beam-size 200 --batch-size 64
 ```
 
-Data and model weights stay in this benchmark directory. Results are saved in
-`artifacts/benchmarks/amazon-industrial-scientific/`: `training/` for histories and `evaluation/`
-for metrics. These generated files are ignored by Git. No new dependencies are needed.
-Use `--history-dir` to override the history directory separately from `--checkpoint-dir`.
-Downloads use the existing Hugging Face cache.
+Data and weights stay here; metrics and histories go under `artifacts/benchmarks/amazon-industrial-scientific/`. Generated files are Git-ignored. Use `--history-dir` to change where histories go.
 
 ## Preprocessing
 
-The pipeline follows the other Amazon categories in this repository:
+The pipeline uses the same stages as the other Amazon benchmarks:
 
 - Download the official **5-core rating-only** CSV. All rating values count as
   implicit interactions; review text is not used.
@@ -35,9 +30,7 @@ The pipeline follows the other Amazon categories in this repository:
   the final event is test. All earlier events are training data.
 - Assign sorted item IDs starting at 1; 0 is reserved for PAD.
 
-This uses a per-user split, not a global temporal cutoff. K-core filtering is done
-before splitting, as in the existing Amazon pipeline. The retained catalog includes
-held-out items. Head/mid/tail/unseen counts are computed from **training events only**.
+The split is chronological within each user, after k-core filtering; it is not a global calendar cutoff. The catalog retains held-out items. Head/mid/tail/unseen groups use training interactions only.
 
 Metadata Parquet files are pinned to revision
 `2b6d039ed471f2ba5fd2acb718bf33b0a7e5598e`, where this category is available in Parquet.

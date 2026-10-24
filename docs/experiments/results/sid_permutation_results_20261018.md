@@ -5,9 +5,9 @@ Generated comparison: [validation table](../../../artifacts/main/reports/sid_per
 
 ## Verified comparison
 
-Both GenRec C models completed 50 epochs on 574,699 training examples with the same configuration, training seed 42, initial trainable-state hash, RQ checkpoint hash, dataset hashes, and 80,471 ordered validation users. Both use beam 100 and the same full catalog. Early stopping was disabled; selection remained lowest teacher-forced validation loss. Selected epochs: original 49, permuted 50.
+Both GenRec C runs trained for 50 epochs on 574,699 examples, with matching initial weights, configuration, seed 42, RQ/data hashes, and 80,471 ordered validation users. Both use beam 100 and the full catalog. Early stopping was off; checkpoints were still selected by validation token loss (epochs 49 and 50).
 
-The actual saved permutation is bijective and the exported array equals original[permutation]. All SID/permutation hashes match evaluation metadata. Both retain [256, 40383, 118943, 134288] distinct prefixes at depths 1–4. The permutation moved 134,260 of 134,288 items (99.979%); fixed points/singletons are recorded. The original source SID hash equals the pre-control Two-Tower SID hash.
+The saved permutation is bijective and matches `original[permutation]`. All SID and permutation hashes match the evaluations. Both conditions have [256, 40383, 118943, 134288] prefixes at depths 1–4. Of 134,288 items, 134,260 (99.979%) moved; fixed points and singletons remain. The original SID hash matches the earlier Two-Tower export.
 
 ## Item-level results
 
@@ -21,7 +21,7 @@ Percent, with Recall@50 hit counts. Zeros below are exact, not rounding.
 | tail | 32,279 | 0.019 | 0.000 | 0.105 (34) | 0.000 (0) |
 | unseen | 4,482 | 0.022 | 0.000 | 0.112 (5) | 0.000 (0) |
 
-Overall R@50 falls by 47.73% relative (6.607% to 3.453%); original is 1.913 times permuted. NDCG@50 falls from 2.325% to 1.202%. All 2,779 top-50 hits in the permuted run are head targets. This does not mean every recommended item is head; the artifact describes successful target hits, not exposure composition.
+R@50 drops from 6.607% to 3.453% (47.73% relative), and NDCG@50 from 2.325% to 1.202%. The permuted model's 2,779 successful top-50 targets are all head items; this does not describe the entire exposure distribution.
 
 The original gains 2,538 hits over permuted; 2,385 of those are head (about 94%). Relative rare-item effects are severe, but the aggregate improvement remains dominated by head. Unseen item-level evidence is only 5 versus 0 hits and must not be presented as robust general cold-start success.
 

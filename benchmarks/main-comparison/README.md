@@ -1,9 +1,6 @@
 # Main dataset: ItemKNN, GRU4Rec, LightGCN, and TIGER
 
-Compare these models with GenRec on the existing main Amazon dataset. Run all
-commands from the repository root, in the project's Python environment. No data
-download or new split is needed. Training, evaluation, and ItemKNN fitting run
-only when you execute the commands below.
+Run ItemKNN, GRU4Rec, LightGCN, and TIGER against GenRec on the existing Amazon split. Commands run from the repository root. Nothing is downloaded or trained until a command is run.
 
 ## Implementations
 
@@ -19,16 +16,9 @@ similarity pruning follows the candidate-column convention used by RecBole;
 cosine ties are resolved by item ID. `--shrink` adds a shrinkage term to the
 product of item norms. History scores sum similarities over distinct seen items.
 
-GRU4Rec and LightGCN reuse the model classes, not RecBole's data splitting or
-training runner. LightGCN overrides only adjacency construction to avoid the
-removed SciPy `dok_matrix._update` API, preserving symmetric degree normalization.
-Negative sampling excludes all of a user's training items and uses no held-out
-labels. Validation edges are never added to the LightGCN graph.
+GRU4Rec and LightGCN use RecBole model classes with this project's data and training loops. LightGCN builds adjacency without the removed SciPy `dok_matrix._update` API, keeping symmetric degree normalization. Negatives exclude a user's training items; validation edges never enter the graph.
 
-Dependencies are already installed in the reviewed workspace: RecBole 1.2.1,
-Transformers 5.16.1, PyTorch, NumPy, SciPy, and Polars. Nothing is installed by these
-scripts. Package versions are recorded in each checkpoint/history. T5 uses numeric
-tokens directly: no pretrained language-model download or SentencePiece tokenizer.
+The reviewed environment used RecBole 1.2.1, Transformers 5.16.1, PyTorch, NumPy, SciPy, and Polars. Scripts record installed versions but do not install packages. T5 uses numeric tokens, not a pretrained LM or SentencePiece.
 
 References: [RecBole models](https://www.recbole.io/docs/user_guide/model_intro.html),
 [LightGCN](https://arxiv.org/abs/2002.02126), and
@@ -59,16 +49,11 @@ References: [RecBole models](https://www.recbole.io/docs/user_guide/model_intro.
 - Exact-score ties are resolved by ascending item ID. GenRec/TIGER retain the
   existing beam implementation's tie behavior.
 
-The neural baselines default to selection by **validation all-target NDCG@10**.
-`--selection-metric recall@20` is also available. Existing GenRec checkpoints
-were selected by token loss: the report calls out this difference. Hyperparameter
-settings below are starting points, not tuned best results. Use validation for
-selection, preserve run names, then report the chosen models on test.
+Neural baselines select by validation **all-target NDCG@10** by default; `--selection-metric recall@20` is available. GenRec instead selected checkpoints by token loss. Treat these as different selection rules, not matched tuning budgets.
 
 ## Fit and train
 
-Use a new `--run-name` for each configuration. Existing run directories are
-rejected rather than overwritten; omitting the name creates a timestamped run.
+Give each run a new `--run-name`; existing run folders are not overwritten. With no name, the script uses a timestamp.
 
 ```bash
 python benchmarks/main-comparison/train.py --model itemknn --run-name itemknn \
@@ -86,18 +71,9 @@ python benchmarks/main-comparison/train.py --model tiger --run-name tiger_conten
   --eval-batch-size 16 --decode-batch-size 128 --beam-size 100
 ```
 
-ItemKNN fitting and LightGCN graph propagation can be expensive on the main
-catalog. TIGER sees up to 201 encoder tokens for 50 items plus a user token.
-Lower batch sizes if needed. `--amp` optionally enables CUDA float16 for GRU4Rec
-and TIGER. `--num-workers` defaults to 0; training entry points are guarded for
-spawn/forkserver workers.
+ItemKNN fitting and LightGCN propagation may be slow at this catalog size. TIGER accepts up to 201 encoder tokens for 50 items and a user token. Reduce batch size if memory is tight. `--amp` enables optional CUDA float16 for GRU4Rec and TIGER.
 
-All runs save `best.pt` inside `benchmarks/main-comparison/checkpoints/<run-name>/`
-and `history.json` inside `artifacts/benchmarks/main-comparison/training/<run-name>/`.
-Use `--history-dir` to override the history root separately from `--checkpoint-dir`.
-Neural histories include
-loss, per-group validation metrics, epoch duration, and best epoch. ItemKNN saves
-the fitted sparse matrix and validation metrics. Test evaluation is separate.
+Best weights go to `benchmarks/main-comparison/checkpoints/<run-name>/best.pt`; histories go to `artifacts/benchmarks/main-comparison/training/<run-name>/history.json`. Use `--history-dir` and `--checkpoint-dir` to change either root. Test evaluation is a separate step.
 
 For a short neural smoke run, add `--smoke --valid-limit 32`. It uses at most
 1,024 training examples and one epoch, with a separate `_smoke` directory.
@@ -119,7 +95,7 @@ dimension 1,024, and dropout 0.1. `--user-buckets 0` removes the user token for
 a history-only ablation. These choices differ from GenRec's summed per-item SID
 embeddings and per-level output distributions.
 
-This is an **adapted TIGER baseline, not an exact paper reproduction**:
+This is an **adaptation of TIGER**, not a paper reproduction:
 
 - Reuse this repository's BGE/content RQ-VAE IDs instead of retraining the paper's
   Sentence-T5/32-dimensional tokenizer. Prepare them with the root README pipeline.
@@ -172,16 +148,6 @@ python benchmarks/main-comparison/report.py \
   artifacts/benchmarks/main-comparison/evaluation/genrec_content_C_test.json
 ```
 
-This writes `comparison.md` and `.csv` under `artifacts/benchmarks/main-comparison/reports/`.
-Markdown uses percentages; CSV retains metric fractions. Mismatched dataset
-hashes, split/catalog, ordered evaluation user IDs, target/group counts, and
-generative beam widths are rejected.
-Smoke/subset outputs require `--allow-smoke` and are labeled accordingly. Old
-GenRec JSON without dataset/user signatures must be regenerated with the current
-evaluator. These checks do not make unequal tuning budgets a controlled ablation.
+The report writes `comparison.md` (percentages) and `.csv` (fractions) in `artifacts/benchmarks/main-comparison/reports/`. It rejects mismatched dataset hashes, splits, catalogs, users, group counts, and beam widths. Use `--allow-smoke` for subset results. Regenerate old GenRec JSON if it lacks dataset/user signatures.
 
-Suggested first validation sweeps: ItemKNN neighbors 50/100/200; GRU dimensions
-64/128 and learning rates 0.0003/0.001; LightGCN layers 1/2/3 and regularization
-0.00001/0.0001/0.001; TIGER learning rate 0.0001/0.0003 and user token on/off.
-Change one setting at a time, use separate run names, and record the selection
-criterion. No benchmark-quality results have been produced by adding this code.
+Possible validation sweeps: ItemKNN neighbors 50/100/200; GRU width 64/128 and learning rate 0.0003/0.001; LightGCN 1/2/3 layers and regularization 0.00001/0.0001/0.001; TIGER learning rate 0.0001/0.0003 and user token on/off. Change one setting per run and record the selection metric.

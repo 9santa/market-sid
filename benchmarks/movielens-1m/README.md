@@ -1,10 +1,6 @@
 # MovieLens 1M GenRec benchmark
 
-Run commands from the repository root using the existing Python environment.
-Data and model weights stay in this benchmark directory. Results are saved in
-`artifacts/benchmarks/movielens-1m/`: `training/` for histories and `evaluation/`
-for metrics. These generated files are ignored by Git. No new dependencies are needed.
-Use `--history-dir` to override the history directory separately from `--checkpoint-dir`.
+Run from the repository root. Data and weights stay in this benchmark directory; results go to `artifacts/benchmarks/movielens-1m/`. Generated files are Git-ignored. `--history-dir` can be set separately from `--checkpoint-dir`.
 
 ## Pipeline
 
@@ -15,24 +11,13 @@ python benchmarks/movielens-1m/train.py --variant B
 python benchmarks/movielens-1m/evaluate.py --split test --beam-size 200 --batch-size 32
 ```
 
-`preprocess.py` downloads the official [MovieLens 1M archive](https://grouplens.org/datasets/movielens/1m/).
-For an existing download, pass `--raw-dir /path/to/ml-1m` containing `ratings.dat`
-and `movies.dat`. The archive's README is retained with downloaded data.
+`preprocess.py` downloads [MovieLens 1M](https://grouplens.org/datasets/movielens/1m/). To use existing files, pass `--raw-dir /path/to/ml-1m` with `ratings.dat` and `movies.dat`.
 
-`prepare_sids.py` embeds titles (including the release year) and genres with the
-repository's pinned BGE-small encoder. It trains the existing RQ-VAE and appends
-a collision token to make every movie's SID unique. Catalog text and encoder
-settings identify the embedding cache. Training uses full codebook vocabulary
-sizes, including unused codes, so RQ initialization has matching shapes.
+`prepare_sids.py` encodes titles, years, and genres with the pinned BGE-small model, trains RQ-VAE, and adds a collision token for unique SIDs. Cache metadata records the input and encoder settings. The RQ initialization uses full codebook sizes, including unused entries.
 
-`train.py` reuses `GenRecTrainDataset`, `GenerativeRecommender`, and the existing
-training/teacher-forced validation functions. Each run saves JSON history with
-losses, per-level accuracy, learning rate, epoch duration and best epoch.
-Checkpoint selection and early stopping use **validation token loss**.
+`train.py` uses the shared GenRec dataset, model, and validation code. JSON histories include loss, token accuracy, learning rate, epoch duration, and best epoch. Early stopping and checkpoint choice use **validation token loss**.
 
-`evaluate.py` reuses constrained beam search and the existing Recall/NDCG metrics
-at 10, 20 and 50. It restores the checkpoint's variant and rejects mismatched
-catalogs, sequences or SIDs. Results include the checkpoint, split and beam settings.
+`evaluate.py` runs constrained beam search and Recall/NDCG@10/20/50. It restores the checkpoint variant and checks catalog, sequence, and SID identities.
 
 ## Protocol
 
@@ -57,9 +42,7 @@ catalogs, sequences or SIDs. Results include the checkpoint, split and beam sett
   interaction counts: >20, 6–20, 1–5, and 0. Most MovieLens targets may be head
   under these thresholds. Groups with no targets are omitted.
 
-The default dataset has 6,040 users, 3,706 rated movies and 1,000,209 interactions.
-Do not compare these full-catalog metrics directly with papers using sampled
-negatives or different filtering, ordering and splitting rules.
+MovieLens 1M contains 6,040 users, 3,706 rated movies, and 1,000,209 interactions. Results with sampled negatives or different splits are not directly comparable.
 
 ## Variants and hyperparameters
 

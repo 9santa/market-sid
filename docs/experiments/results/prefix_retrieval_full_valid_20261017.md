@@ -1,17 +1,17 @@
 # Full-validation prefix retrieval with learned Two-Tower ranking
 
-Reviewed 2026-10-17. Source: [raw artifact](../../../artifacts/main/diagnostics/prefix_retrieval/prefix_retrieval_valid_nolimit_learned_tt.json).
+Source: [raw artifact](../../../artifacts/main/diagnostics/prefix_retrieval/prefix_retrieval_valid_nolimit_learned_tt.json).
 
 Artifact SHA-256: `f4fef190a78909088fabb0e07700fa358c87b4dc52db30078a26c0cd8db476f5`.
 
 ## Protocol
 
-80,471 validation targets; full catalog; complete recipient-history filtering; beam 100; depths 2/3; matched-control seeds 42/43/44; one shuffled-history seed 42; hybrid quotas 5/10. All reported lists have 50 items and no target is already seen. These are validation results, not the earlier test results.
+Validation uses 80,471 targets, the full catalog, complete seen-item filtering, beam 100, depths 2/3, control seeds 42/43/44, shuffled seed 42, and hybrid quotas 5/10. Every list contains 50 unseen-by-user candidates. These numbers are validation, not test.
 
 GenRec: epoch 49, SHA-256 `a20f0c77f77f3fe178d4d12102b6347aa04983da6cf9abcfe454fd51a2030cec`.
 Two-Tower: epoch 35, SHA-256 `bf3c6626e10d1c0e62595287ed75c69e318135cebaef96ea34fd590744d17fd6`.
 
-The evaluator source hash matches the current script. Aggregate group counts, hits/recall, conditional recall, and unchanged hybrid top-10/20 were checked. No model inference or training was rerun. The legacy Two-Tower checkpoint has no verified training-data signature; catalog mapping and current embedding cache were checked by the evaluator.
+Checks matched the evaluator source, group counts, hit/recall totals, conditional recall, and unchanged hybrid top-10/20. No models were rerun. The old Two-Tower checkpoint lacks a verified training-data signature, although catalog mappings and embedding cache were checked.
 
 ## Main ranking results
 
@@ -29,7 +29,7 @@ Recall@50 in percent; parentheses contain target hits. `exact` is full-SID beam 
 | hybrid2_two_tower_slots10 | 6.539 (5262) | 20.954 (5001) | 0.852 (169) | 0.251 (81) | 0.245 (11) |
 | hybrid3_two_tower_slots5 | 6.636 (5340) | 21.574 (5149) | 0.685 (136) | 0.155 (50) | 0.112 (5) |
 
-GenRec leads aggregate and head metrics. Full-catalog Content Two-Tower leads mid/tail/unseen. Prefix-2 TT has 92 more aggregate hits than full TT, entirely explained by head (+153), offset by mid (-3), tail (-38), and unseen (-20). Thus prefix restriction does not improve rare-item retrieval over the same full-catalog scorer in this run.
+GenRec has the best overall and head R@50; full-catalog Content Two-Tower leads mid/tail/unseen. Prefix-2 TT gains 92 overall hits over full TT, coming entirely from head (+153), with mid (-3), tail (-38), and unseen (-20) losses. The prefix filter does not help rare items with these scores.
 
 ## Coverage controls
 
@@ -81,7 +81,7 @@ The missing comparison is the same quota hybrid using full-catalog TT candidates
 
 This repository uses BGE features through a shared learned item MLP, including for interaction-unseen items. It has no per-item trainable ID lookup. The user tower is sequential. Thus it already has content-based inductive capability; it does not need a separate content-only fallback. GenRec uses compressed semantic representations and must score a complete autoregressive SID path. A representable unseen item need not receive sufficient probability to enter the beam or top-K.
 
-[TIGER §4.3](https://arxiv.org/html/2305.05065v3#S4.SS3) evaluates a special cold-start procedure: remove 5% of test items from training, include unseen items matching the first three generated codes, and control their maximum fraction with epsilon. Its cold-start comparator there is Semantic_KNN, not this trained content Two-Tower. This does not establish that ordinary full-SID beam search generally beats content-aware dense retrieval.
+[TIGER §4.3](https://arxiv.org/html/2305.05065v3#S4.SS3) evaluates a special cold-start procedure: remove 5% of test items from training, include unseen items matching the first three generated codes, and control their maximum fraction with epsilon. Its cold-start comparator there is Semantic_KNN, not this trained content Two-Tower. This does not show that ordinary full-SID beam search generally beats content-aware dense retrieval.
 
 [LIGER §§2.3–2.4](https://arxiv.org/html/2411.18814v2) reports cold-start failures of TIGER/TIGER(T) and nonzero dense retrieval under its own protocol, linking the failure to low generated path probabilities. Its hybrid also explicitly adds cold-start items to candidates before dense ranking (§3); those results cannot be credited solely to generative candidate coverage. These are counterexamples to a universal superiority claim, not proof that dense retrieval always wins.
 

@@ -1,0 +1,15 @@
+{
+  "id": "genrec-target-frequency-v1",
+  "protocol_sha256": "65df1f4d8f7574e3e6bd58bedc514a9dfa909e2945858164244d6db1a598c3ee",
+  "variant": "C",
+  "sid_source": "twotower",
+  "gammas": [
+    0.0,
+    0.25,
+    0.5
+  ],
+  "beta": 1.0,
+  "normalization": "mean weight over all positive train examples = 1",
+  "selection": "unchanged: full validation all-target Recall@50",
+  "scope": "validation-only objective ablation; original final benchmark unchanged"
+}

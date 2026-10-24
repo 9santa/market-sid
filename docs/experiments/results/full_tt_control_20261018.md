@@ -1,15 +1,12 @@
-# Full-catalog Two-Tower hybrid control — 2026-10-18
+# Full-catalog Two-Tower hybrid control
 
 Source: [validation artifact](../../../artifacts/main/diagnostics/prefix_retrieval/prefix_retrieval_valid_full_tt_control.json).
 Per-user paired checks: [derived statistics](../../../artifacts/main/derived/full_tt_control_20261018_statistics.json).
 
-Artifact SHA-256: `41dbe407418e6f0d64a3ff313a00226becdcfa9460d0e095a7b65b1d0b0d871e`.
-
 ## Question and protocol
 
-Does restricting novel Two-Tower additions to GenRec prefixes improve the hybrid over adding novel items directly from full-catalog Two-Tower? Same frozen checkpoints, 80,471 validation users, beam 100, depths 2/3, quotas 5/10. All hybrids keep exact top-45/top-40 and exclude the entire exact top-50 from additions. Full TT uses the same learned scores without prefix restriction. No models were trained or reevaluated during this analysis.
+Does a prefix filter improve a quota hybrid compared with adding items directly from full-catalog Two-Tower? The saved run uses frozen models, 80,471 validation users, beam 100, prefix depths 2/3, and 5/10 new-item slots. Each hybrid keeps GenRec's top 45/40, with all original top-50 items excluded from additions. Full-TT uses the same scores without a prefix filter.
 
-The NPZ SHA-256 and ordered-user hash match the JSON. All 26 methods' Recall/NDCG metrics were reconstructed from saved per-user target ranks. Checkpoint/SID/data/user hashes match the prior full-validation run, and all previously available ranking results match exactly. This isolates the newly added full-TT hybrid control.
 
 ## Recall@50
 
@@ -67,14 +64,12 @@ The sparse unseen intervals need particular care. Prefix-2 slots5 versus full TT
 
 ## What remains of the prefix hypothesis
 
-The previous shuffled-history/popularity controls still support history-dependent coarse coverage. This run does not negate that result. It answers a different question: for the tested quotas and fixed scorers, restricting additions to predicted prefixes has no demonstrated rare-item advantage over simply adding full-TT candidates. The improvement over exact GenRec alone can therefore be explained without requiring prefix restriction. This is not proof that prefixes never help under other budgets or ranking functions.
+Shuffled-history and popularity controls still show that GenRec finds history-dependent coarse regions. But with these frozen scorers and quotas, restricting Two-Tower additions to those regions did not improve tail or unseen hits over full-catalog Two-Tower. The hybrid gain over GenRec alone does not require a prefix filter.
 
 Even full-TT slots5 yields only 63 tail/11 unseen hits, compared with standalone TT's 248/47. The hybrid preserves GenRec's head advantage at the cost of retaining only a small fraction of TT's rare-item capability. Top-10/20 remain unchanged by construction; all new hits are at positions 41–50 or 46–50. NDCG@50 follows the same trade-off: exact 2.3308%, full-TT slots5 2.3379%, full-TT slots10 2.3259%.
 
 ## Decision
 
-Pause further prefix-hybrid tuning. Keep full-TT slots5 as the simple candidate if preserving aggregate/head quality is the priority; slots10 is a separate, explicitly stronger mid/tail trade-off. Neither should be described as a validated cold-start solution. Avoid selecting a quota solely because it wins a small observed validation difference.
-
-Finish the already-running original-versus-permuted-SID control. That directly tests learned assignment utility and is logically separate from whether prefix retrieval improves this ensemble. Document both the positive coarse-coverage evidence and the negative incremental hybrid evidence. Any final comparison should use a fixed quota/objective and acknowledge earlier test-set exploration.
+Pause prefix-hybrid tuning. Full-TT with five slots is the simpler aggregate/head-preserving choice; ten slots trades more head hits for mid/tail recall.
 
 Runtime recorded for the evaluation was 21.85 minutes, including 113.21s real GenRec, 9.03s TT encoding/full scoring, and 1188.30s ranking/controls. These are diagnostic components, not a deployment latency comparison; prefix methods reused full-catalog TT scores.

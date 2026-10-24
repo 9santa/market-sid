@@ -1,8 +1,6 @@
 # Prefix retrieval: history controls and learned ranking
 
-Implements step 2 of the [completion plan](../reviews/project_review_20261017.md).
-The experiment freezes GenRec, its SID catalog, and the existing Content
-Two-Tower. It trains nothing and uses validation for comparison.
+This is the [project review's](../reviews/project_review_20261017.md) prefix-ranking follow-up. GenRec, SID mappings, and Content Two-Tower are frozen; comparisons use validation without training.
 
 ## Questions
 
@@ -181,21 +179,8 @@ These are diagnostic costs. The prefix ranker reuses full-catalog scores for
 consistent quality comparisons; this implementation does not demonstrate a
 standalone prefix-reranking latency advantage.
 
-Interpret results in order: real versus control coverage; learned versus
-mean-profile conditional recall on identical candidates; prefix TT versus full
-TT; finally hybrids versus exact GenRec. If TT alone explains the improvement,
-do not credit semantic retrieval. Keep negative results and head/rare trade-offs.
+Compare history-aware coverage with controls first, then candidate ranking against mean-profile and full-catalog Two-Tower, and finally hybrids against exact GenRec. An improvement explained by Two-Tower alone is not evidence of better semantic retrieval.
 
-Implementation was checked with temporary synthetic CPU fixtures, including a
-seen target, direct full-TT scoring, quota preservation, batching invariance,
-legacy method equivalence, and checkpoint mapping rejection. The 18 existing
-tests passed. No new test files or dependencies were added. Main-dataset v3
-quality results were subsequently supplied by the user and are analyzed in the
-[full-validation review](../results/prefix_retrieval_full_valid_20261017.md).
+Synthetic CPU checks covered seen targets, full-catalog scoring, quota preservation, batching, compatibility with older methods, and checkpoint mismatch rejection. All 18 existing tests passed. See the [full-validation results](../results/prefix_retrieval_full_valid_20261017.md).
 
-The v4 full-TT hybrid control and per-user output were checked on small synthetic
-models, including direct full-catalog scoring, overlap/backfill, seen filtering,
-reconstruction of aggregate metrics from saved ranks, and paired-difference
-calculations. The 18 existing tests passed. The user's completed full-validation
-v4 run is analyzed in the [full-TT control review](../results/full_tt_control_20261018.md),
-including exact paired checks for sparse unseen hits.
+Additional v4 synthetic checks covered full-catalog ranking, overlap/backfill, seen filtering, metric reconstruction from saved ranks, and paired differences. The 18 tests passed. See [full-TT control results](../results/full_tt_control_20261018.md).

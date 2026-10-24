@@ -1,25 +1,15 @@
 # Main dataset: SID likelihood versus training frequency
 
-This page defines the diagnostics and commands. The [research log](../research_log.md#8-teacher-forced-path-probabilities--h09)
-records why they were introduced and how the conclusions changed. The
-[saved results](../results/overview.md#path-likelihood-and-history-sensitivity) include path
-likelihood, prior sweeps, and the completed trie-normalization experiment.
+Commands for path-likelihood diagnostics, training-frequency priors, and decoding ablations. See the [research log](../research_log.md#8-teacher-forced-path-probabilities--h09) for motivation and [results](../results/overview.md#path-likelihood-and-history-sensitivity) for outcomes.
 
-Use the existing tokenizer and GenRec checkpoint. This diagnostic changes neither
-training nor decoding scores, and runs no beam search. It scores every held-out
-target with teacher forcing, including paths that normal beam search would prune.
+Teacher forcing scores every held-out SID, including paths beam search would prune. It does not change training or decoding and does not run beam search.
 
 ```bash
 python -m scripts.evaluate_genrec --sid-source twotower --split test \
   --batch-size 64 --diagnose-paths --shuffle-histories
 ```
 
-Use `--sid-source content`, `rq4_a`, `rq4_b`, or `rq4_c` for the other checkpoints.
-For a small run add `--limit 100`. The frequency counts still use the full training
-population. The optional shuffled-history comparison doubles scoring work and
-uses a fixed permutation with no user receiving their own history. It requires
-at least two evaluation users. It is a diagnostic comparison, not an unconditional
-model probability. `--beam-size` has no effect in this mode.
+Use `--sid-source content`, `rq4_a`, `rq4_b`, or `rq4_c` for other checkpoints. Add `--limit 100` for a smoke run; frequency counts still use all training users. `--shuffle-histories` scores a second, shuffled history for each user (at least two users required). `--beam-size` is ignored here.
 
 Outputs share the stem `artifacts/main/diagnostics/paths/genrec_twotower_C_test_path_diagnostics`:
 
@@ -35,10 +25,7 @@ Outputs share the stem `artifacts/main/diagnostics/paths/genrec_twotower_C_test_
   prefix count versus cumulative prefix log probability, and marginal token
   count at a level versus conditional token log probability.
 
-All logarithms are natural. Probabilities use the full model vocabulary before
-trie masking, matching production beam-search scores. No seen-item filtering is
-applied. Teacher forcing supplies only preceding true tokens because the decoder
-uses its causal mask.
+Logs are natural. Token probabilities use the model's full vocabulary, before trie masking. No seen-item filtering applies; teacher forcing supplies previous true tokens under the decoder's causal mask.
 
 ## Count the training objective's actual targets
 
@@ -61,17 +48,9 @@ have conditional log prior zero, even when the model assigns them low probabilit
 
 ## Interpretation before correction
 
-A frequency correlation is evidence of association, not proof that popularity
-alone causes the error. Histories and legitimate next-item demand are correlated
-with popularity too. Inspect within-group trends, equal-prefix-weighted results,
-and how much real history improves scores relative to shuffled history. This
-measures likelihood/frequency dependence; it is not a full calibration test.
+Path-frequency correlation alone does not show that popularity causes retrieval errors. Compare within groups and against shuffled-history scores; this is not a calibration study.
 
-A later correction could subtract per-level smoothed log priors, with alpha
-selected on validation data. It must be applied during beam expansion to affect
-early pruning; reranking final beams cannot recover missing candidates. Watch
-zero-count paths carefully, since subtracting their small log priors can create
-large boosts.
+A conditional-prior correction has to run during beam expansion. Reranking completed beams cannot recover pruned candidates. Low-frequency and zero-count paths may receive large boosts.
 
 ## Conditional-prior decoding sweep
 
@@ -83,10 +62,7 @@ python -m scripts.evaluate_genrec --sid-source twotower --split valid \
   --prior-alpha-sweep 0 0.05 0.1 0.2 0.3 0.5
 ```
 
-Bare `--prior-alpha-sweep` selects this same grid. Alpha zero is always included.
-For a smoke run, add `--limit 100`; priors still use every training user. The
-checkpoint and priors are loaded once, then each alpha runs its own beam search.
-This requires six decoding evaluations, with no retraining.
+`--prior-alpha-sweep` uses the shown grid, including alpha 0. Add `--limit 100` for a smoke run. Each alpha gets a separate beam evaluation, with priors built once; training is unchanged.
 
 At every expansion, the score increment is
 `log P_model(token | history, prefix) - alpha * log P_train(token | prefix)`.
@@ -116,10 +92,7 @@ This saves `artifacts/main/diagnostics/decoding/genrec_twotower_C_test_prior_alp
 For either mode, `--prior-smoothing` defaults to 0.5. The alpha flags are mutually
 exclusive and cannot be combined with teacher-forced `--diagnose-paths`.
 
-Improvement would show that this score correction helps retrieval, not by itself
-prove a causal explanation of personalization. No improvement on this grid
-would not establish that the model contains no useful rare-item signal; smoothing,
-the shared alpha across levels, and invalid-continuation penalties also matter.
+An improvement would support this decoding rule, not prove a causal theory of personalization. A flat result would not rule out other priors, per-level weights, or normalization.
 
 ## Isolate correction at c2
 
@@ -167,9 +140,4 @@ For a fresh full-vocabulary baseline, run the same command without
 `--trie-normalize`. Add `--limit 100` to both commands for a smoke comparison.
 Different normalization modes have separate default output filenames.
 
-Trie normalization changes the decoding distribution; it is an ablation, not an
-automatic correctness fix. It removes penalties for mass placed on impossible
-continuations, but can also promote a prefix whose legal continuations all have
-low model probability. Compare Recall/NDCG and survival by group on validation
-before evaluating the selected mode on test. Teacher-forced `--diagnose-paths`
-continues to measure raw model probabilities and cannot use this flag.
+Trie normalization changes the decoding objective, not training. It removes probability mass assigned to impossible continuations, but may also promote weak prefixes. Compare group-level Recall/NDCG and survival on validation before trying test. `--diagnose-paths` always uses raw model probabilities.

@@ -1,7 +1,6 @@
 # Repository and result layout
 
-Code, documentation, model weights, and measurements have separate homes.
-Commands are run from the repository root.
+Run commands from the repository root. Source files, notes, checkpoints, and outputs are kept separate.
 
 | Location | Contents |
 |---|---|
@@ -24,15 +23,8 @@ Commands are run from the repository root.
 | `benchmarks/<name>/checkpoints/` | Benchmark model weights (`.pt`) |
 | `data/` and `benchmarks/<name>/data/` | Datasets, embeddings, and SID arrays |
 
-Training/evaluation scripts use these output directories by default. Benchmark
-training and tokenizer scripts accept `--history-dir` independently of
-`--checkpoint-dir`. Evaluation/report scripts retain their `--output` overrides.
-For a new experiment, use a distinct output filename/run name; moving the existing
-results does not add automatic versioning or prevent overwriting default outputs.
+Scripts use these paths by default. For benchmarks, `--history-dir` and `--checkpoint-dir` are separate; evaluation/report scripts also accept `--output`. Give each run a unique name to avoid overwriting results.
 
 ## Finding results
 
-Start with the [research notebook](experiments/README.md) for the hypothesis,
-protocol, and interpretation. Follow its links to the raw measurements.
-`benchmarks/` contains executable pipelines and their READMEs, not new result files.
-
+Start at the [research notebook](experiments/README.md) and follow links to protocols, results, and raw files. Executable benchmark pipelines live in `benchmarks/`.

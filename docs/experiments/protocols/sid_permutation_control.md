@@ -1,8 +1,6 @@
 # Semantic assignment control: original versus permuted Two-Tower SIDs
 
-Question: does the learned item-to-SID assignment help GenRec, beyond representing
-items with four tokens and the existing catalog trie? This is a new matched pair
-of GenRec C runs, not an inference-time substitution in the old checkpoint.
+Does the learned item-to-SID assignment improve GenRec C, or is a four-token ID plus the same trie enough? This protocol trains a fresh matched pair; it does not swap SIDs into an old checkpoint.
 
 Completed main-validation evidence: [results and interpretation](../results/sid_permutation_results_20261018.md).
 
@@ -61,11 +59,7 @@ lookup and should match exactly. The same seed and unchanged dataset preserve
 the example-shuffle RNG setup; CUDA is not forced into deterministic mode, so
 this is not a guarantee of bitwise training reproducibility.
 
-The epoch budget is fixed at 50 for both runs; disabling early stopping does not
-change selection: each saves the checkpoint with lowest teacher-forced validation
-loss. All other settings come from the same `train_genrec.CONFIG`. The old
-checkpoint is historical context, not the matched original baseline. No extra
-hyperparameter search is part of this control.
+Both runs train for 50 epochs without early stopping and choose the lowest validation-token-loss checkpoint. Other settings come from the same `train_genrec.CONFIG`. The historical checkpoint is not the matched baseline.
 
 ## Evaluate the matched pair
 
@@ -115,9 +109,4 @@ intervention. One permutation and training seed are exploratory evidence. Repeat
 only if the effect warrants the budget; do not keep changing seeds until the
 preferred conclusion appears.
 
-Verified on a temporary synthetic catalog: export invariants and reproducibility,
-two tiny two-epoch training runs with matching initial-state hashes, evaluation,
-combined report generation, overwrite rejection, and mismatched RQ-hash rejection.
-All 18 existing tests passed; no new test files or dependencies were added. The
-user subsequently completed main-data export, training and validation; see the
-linked results for measured quality and remaining limitations.
+Synthetic tests checked export invariants, reproducibility, matched initial weights, evaluation, reports, overwrite safeguards, and RQ hash checks. All 18 existing tests passed. Main-data validation results are [here](../results/sid_permutation_results_20261018.md).

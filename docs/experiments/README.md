@@ -1,71 +1,29 @@
 # Research notebook
 
-This is the project's research memory: what we asked, what we tried, what the
-saved results show, and why the next question changed. Reconstructed on
-**2026-09-19** from local artifacts, current source code, and the project discussion.
-It is a working record, not a claim that the research is finished.
+Start here for the experiment history and current findings. This index was assembled from code and saved results on 2026-09-19; newer validation controls are linked below.
 
-**Latest review (2026-10-17):** [project assessment and completion plan](reviews/project_review_20261017.md)
-incorporates the 10,000-user prefix controls, model-comparison runs, research
-papers, remaining validity gaps, and a bounded plan to finish the project.
+The main result is mixed. GenRec prefixes respond to user history, and the learned SID assignment beats a matched permutation. But **rare-item recommendations have not beaten full-catalog Content Two-Tower**, and putting Two-Tower items behind a prefix restriction has not improved the tail/unseen hybrid result.
 
-Step 2 is implemented in the [prefix retrieval/ranking protocol](protocols/prefix_retrieval_ranking.md):
-multi-seed popularity controls, shuffled histories, frozen learned Two-Tower
-reranking/full-catalog scoring, and 5/10-slot hybrids. The
-[full-validation results](results/prefix_retrieval_full_valid_20261017.md) now cover all
-80,471 users: positive history-dependent prefix coverage, but no rare-item
-advantage over full-catalog Content Two-Tower; quota hybrids show trade-offs.
-The [full-TT hybrid control results](results/full_tt_control_20261018.md) now include
-per-user paired checks: prefix restrictions do not improve observed tail/unseen
-hits over the same full-TT quota hybrid; the five-slot full-TT hybrid's small
-aggregate gain over exact GenRec is inconclusive.
-An [offline analysis of prefix conditions](results/prefix_conditions_20261018.md) separates
-rescued and excluded full-TT hits. Rare targets in prefixes with stronger
-other-item training support show positive subsets, but exclusions and weak
-within-pool ranking outweigh these gains overall; subgroup findings are exploratory.
+## Recent results
 
-The [semantic assignment control](protocols/sid_permutation_control.md) prepares matched
-original/permuted Two-Tower SIDs and trains GenRec C with identical initialization
-and epoch budgets. Its [completed validation results](results/sid_permutation_results_20261018.md)
-show R@50 dropping from 6.607% to 3.453% after permutation, with zero mid/tail/unseen
-top-50 hits in the permuted run. This supports learned assignment utility under
-the matched budget, not superiority over Content Two-Tower.
+- [Full-validation prefix retrieval](results/prefix_retrieval_full_valid_20261017.md): 80,471 users, multi-seed popularity controls, shuffled-history control, learned Two-Tower ranking, and 5/10-slot hybrids.
+- [Full-TT hybrid control](results/full_tt_control_20261018.md): restricting the same Two-Tower scores to prefixes did not increase tail/unseen hits over full-catalog additions.
+- [When prefixes help](results/prefix_conditions_20261018.md): some rare targets are rescued by restricting candidate pools, but more are excluded or poorly ranked. The subgroup findings are exploratory.
+- [SID permutation](results/sid_permutation_results_20261018.md): R@50 fell from 6.607% to 3.453% after reassigning whole SIDs within training-frequency bins. A single matched seed pair supports assignment utility, not superiority over other recommenders.
+- [Project review](reviews/project_review_20261017.md): the outstanding validity checks and completion plan.
 
-## Reading guide
+## Where to look
 
-1. [Baseline development](results/baseline_development.md): the Recall@20 ≥ 0.10 goal,
-   SASRec evaluation NaNs, split-order repair, all-prefix training, hyperparameters,
-   GPU throughput, and the complete baseline Recall@20 ledger (B01–B09).
-2. [Research log](research_log.md): hypotheses, assumptions, experiments,
-   interpretations, decisions, corrections to earlier explanations, and open work.
-3. [Results](results/overview.md): numerical tables for the main SID experiments, prefix
-   survival, path likelihood, decoding interventions, and separate benchmarks.
-4. [Earlier and archived experiments](archive.md): baseline hyperparameter runs,
-   fine-tuning, retrieval augmentation, exact-ranking checks, and RecBole results.
-5. [Evidence manifest](../../artifacts/main/derived/evidence_manifest.json): source artifact paths and SHA-256
-   hashes at the time of this review. [Derived statistics](../../artifacts/main/derived/derived_statistics.json)
-   records the small calculations made from existing arrays and diagnostic rows.
-   [Baseline evidence](../../artifacts/main/derived/baseline_evidence.json) separately retains all 17 baseline
-   histories' configurations, selected epochs, final metrics, and source hashes.
-6. [Experiment template](protocols/experiment_template.md): copyable structure for a
-   falsifiable prediction, fixed comparison, provenance, results, and decision.
+- [Baseline development](results/baseline_development.md) — SASRec/Two-Tower fixes, Recall@20 runs, and throughput.
+- [Research log](research_log.md) — hypotheses, failures, changes of direction, and open questions.
+- [Results overview](results/overview.md) — main SID comparisons, path probabilities, decoding, and other datasets.
+- [Archive](archive.md) — older hyperparameter sweeps and exploratory runs.
+- [Protocols](protocols/experiment_template.md) — reusable experiment template. See also [SID ablations](protocols/sid_ablation.md), [path likelihood](protocols/sid_path_likelihood.md), [prefix ranking](protocols/prefix_retrieval_ranking.md), and [SID permutation](protocols/sid_permutation_control.md).
+- [Model comparisons](../../benchmarks/main-comparison/README.md) — ItemKNN, GRU4Rec, LightGCN, and adapted TIGER on the main split. The saved TIGER history has only two epochs.
 
-The existing [SID ablation guide](protocols/sid_ablation.md) and
-[path-likelihood/decoding guide](protocols/sid_path_likelihood.md) remain the runnable
-protocols. The root [README](../../README.md) explains setup and pipelines.
+The [evidence manifest](../../artifacts/main/derived/evidence_manifest.json), [derived statistics](../../artifacts/main/derived/derived_statistics.json), and [baseline ledger](../../artifacts/main/derived/baseline_evidence.json) point to the saved files and hashes behind these notes.
 
-The [main model-comparison pipeline](../../benchmarks/main-comparison/README.md)
-adds ItemKNN, GRU4Rec, LightGCN, and an adapted TIGER baseline. Full main-test
-outputs now exist for all four; TIGER's saved history currently contains only two
-epochs and remains preliminary. See the [comparison](../../artifacts/benchmarks/main-comparison/reports/comparison.md)
-and [latest review](reviews/project_review_20261017.md). Keep these runs separate from
-the historical tables below.
-
-## Questions and current answers
-
-The earlier baseline questions and correctness fixes are indexed as **B01–B09**
-in [baseline development](results/baseline_development.md#objective-and-status). The H IDs
-below cover the subsequent capacity, SID, and generative-retrieval investigation.
+## Questions still being tested
 
 | ID | Hypothesis or question | Current status |
 |---|---|---|
@@ -87,29 +45,10 @@ below cover the subsequent capacity, SID, and generative-retrieval investigation
 | H16 | Prefix restriction adds value to a TT quota hybrid | No observed tail/unseen advantage over the same full-TT hybrid at 5/10 slots |
 | H17 | Learned item-to-SID assignments help GenRec C | Large positive matched-budget effect versus popularity-stratified permutation; one seed pair, validation only |
 
-## Evidence labels
+## Reading results
 
-- **Measured:** a saved metric or a calculation from an existing saved artifact.
-- **Recorded:** reported in the discussion, without the original output recovered.
-- **Implemented:** code exists; this alone does not establish a completed experiment.
-- **Proposed:** an idea without an attributable completed result.
-- **Interpretation:** an explanation consistent with observations, not a measured fact.
+*Measured* means the number comes from a saved output. *Recorded* means the original output could not be recovered. *Implemented* only says code exists; *proposed* has not been tested. Explanations are interpretations, not measurements.
 
-Most raw artifacts and checkpoints are ignored by Git. The Markdown tables retain
-the important results in versionable documentation; raw-artifact links work only
-in a workspace containing those files. Hashes identify the files reviewed, not
-necessarily the checkpoint currently stored under a reused filename.
+Most raw outputs are Git-ignored, so some artifact links require a local research workspace. Hashes identify the files reviewed at the time, not necessarily a checkpoint later written to the same filename.
 
-## Adding a future experiment
-
-Start with the [experiment template](protocols/experiment_template.md).
-
-Record the hypothesis and what would count against it **before** running. Add:
-dataset/split and hashes; checkpoint/SID identity; exact command and configuration;
-seed and user subset; candidate catalog, beam size and score normalization;
-selection metric; baseline and treatment results by group; interpretation;
-limitations; and the resulting decision. Use a new artifact name for each run.
-
-Keep validation selection separate from test reporting. Preserve unsuccessful,
-interrupted, and smoke runs, but label them so they cannot become accidental
-baselines. Update the hypothesis table when evidence changes the explanation.
+For new work, start with the [experiment template](protocols/experiment_template.md). Fix the split, population, candidates, model and SID hashes, seed, metric, and stopping rule before running. Select on validation, keep test separate, give each run a new filename, and record negative or interrupted runs alongside successes.

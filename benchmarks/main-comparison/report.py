@@ -38,6 +38,10 @@ def main():
         if result.get("model") is None and "_limit" in path.name and not args.allow_smoke:
             parser.error(f"{path}: limited GenRec evaluation")
         name = result.get("model") or f"genrec_{result['sid_source']}_{result.get('genrec_variant', 'C')}"
+        if name == "genrec":
+            config = result["config"]
+            name = f"genrec_{result['sid_source']}_{config.get('variant', 'C')}"
+            name += f"_g{config.get('target_gamma', 0):g}_s{config['seed']}"
         results.append((path, name, result))
     beam_sizes = {r["beam_size"] for _, _, r in results if r.get("beam_size") is not None}
     if len(beam_sizes) > 1:
