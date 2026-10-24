@@ -1,5 +1,7 @@
 # Research notebook
 
+[Основные выводы проекта — кратко](conclusions.md).
+
 Start here for the experiment history and current findings. This index was assembled from code and saved results on 2026-09-19; newer validation controls are linked below.
 
 The main result is mixed. GenRec prefixes respond to user history, and the learned SID assignment beats a matched permutation. But **rare-item recommendations have not beaten full-catalog Content Two-Tower**, and putting Two-Tower items behind a prefix restriction has not improved the tail/unseen hybrid result.

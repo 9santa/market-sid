@@ -1,5 +1,7 @@
 # Docs
 
+- [Основные выводы проекта](experiments/conclusions.md) — кратко, с ограничениями и ссылками на результаты
+
 - [README](../README.md) — setup, training, and evaluation
 - [File layout](repository_layout.md) — where outputs are stored
 - [Research notebook](experiments/README.md) — experiments and main findings
