@@ -89,6 +89,14 @@ the original guide. Both protocols accept C; A/B/D require the expanded protocol
 
 ## Freeze, evaluate, report
 
+If some planned seeds could not be trained, add `--allow-missing-seeds` to
+`freeze_selection.py` and pass only completed, protocol-compatible checkpoints.
+The selection records every missing condition/seed before test. It still rejects
+duplicates, incomplete runs, changed training settings, and weighted-loss ablations.
+Report all available seeds; do not select runs by their test results. The report
+lists actual seeds and uses SD N/A for single runs. Paired comparisons use only
+shared seeds, so they may use fewer runs than the aggregate table.
+
 Only after all 40 runs finish, freeze the validation-selected checkpoints. The
 command checks completeness, duplicates, protocol/data identity, and completed
 training histories. The tokenizer directory contains no `best.pt` and is excluded

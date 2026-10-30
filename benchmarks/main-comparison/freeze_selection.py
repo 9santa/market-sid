@@ -34,7 +34,12 @@ def expected_runs(protocol):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("checkpoints", type=Path, nargs="+")
+    parser.add_argument("--allow-missing-seeds", action="store_true",
+                        help="Freeze available runs and explicitly record missing condition/seed pairs")
+    parser.add_argument("--allow-training-deviations", action="store_true",
+                        help="Register additional runs with changed batch size or missing training protocol; label separately")
     parser.add_argument("--data-dir", type=Path, default=ROOT / "data/final-v1")
+    parser.add_argument("--history-dir", type=Path, help="Local history root for checkpoints copied from another machine")
     parser.add_argument(
         "--protocol", type=Path, default=Path(__file__).with_name("final_protocol.json")
     )
@@ -56,14 +61,27 @@ def main():
         if checkpoint.get("loss_experiment_sha256") or checkpoint["config"].get("target_gamma", 0) != 0:
             parser.error(f"Objective ablations are separate from the frozen benchmark: {path}")
         if (
-            not checkpoint_matches_protocol(checkpoint, args.protocol, protocol)
+            (not checkpoint_matches_protocol(checkpoint, args.protocol, protocol)
+             and not (args.allow_training_deviations and checkpoint.get("protocol_sha256") is None))
             or checkpoint["data_signature"] != data.signature
             or checkpoint["smoke"]
             or checkpoint["selection_metric"]
             != "valid.all." + protocol["selection_metric"]
         ):
             parser.error(f"Not a matching protocol checkpoint: {path}")
-        history = json.loads(Path(checkpoint["history_file"]).read_text())
+        fixed = {**protocol["common_training"], **protocol["training_configs"][checkpoint["model"]]}
+        if checkpoint["model"] != "itemknn":
+            fixed.update({key: protocol[key] for key in ("epochs", "patience", "max_len", "beam_size", "selection_metric")})
+        differences = {key: [checkpoint["config"].get(key), value]
+                       for key, value in fixed.items() if checkpoint["config"].get(key) != value}
+        if differences and not (args.allow_training_deviations and set(differences) <= {"batch_size"}):
+            parser.error(f"Training configuration differs from protocol: {path}: {differences}")
+        deviations = dict(differences)
+        if checkpoint.get("protocol_sha256") is None:
+            deviations["training_protocol"] = "not recorded"
+        history_path = (args.history_dir / path.parent.name / "history.json"
+                        if args.history_dir else Path(checkpoint["history_file"]))
+        history = json.loads(history_path.read_text())
         if (
             not history.get("finished_at")
             or history["run_id"] != checkpoint["run_id"]
@@ -86,14 +104,19 @@ def main():
             {
                 "path": str(path.resolve()),
                 "sha256": file_hash(path),
-                "condition": key[0],
+                "condition": f"{key[0]}_batch{checkpoint['config']['batch_size']}" if deviations else key[0],
                 "seed": key[1],
                 "epoch": checkpoint["epoch"],
                 "valid_metric": checkpoint.get("valid_metric"),
                 "training_protocol_sha256": checkpoint["protocol_sha256"],
+                "training_deviations": deviations,
+                "history_file": str(history_path.resolve()),
+                "history_sha256": file_hash(history_path),
             }
         )
-    if runs != expected_runs(protocol):
+    missing = sorted(expected_runs(protocol) - runs)
+    unexpected = sorted(runs - expected_runs(protocol))
+    if unexpected or (missing and not args.allow_missing_seeds):
         parser.error(
             f"Missing runs: {sorted(expected_runs(protocol) - runs)}; unexpected: {sorted(runs - expected_runs(protocol))}"
         )
@@ -105,9 +128,14 @@ def main():
             "data_signature": data.signature,
             "checkpoints": selected,
             "selection_uses_test": False,
+            "allow_missing_seeds": args.allow_missing_seeds,
+            "additional_comparison": args.allow_training_deviations,
+            "missing_runs": [{"condition": name, "seed": seed} for name, seed in missing],
         },
     )
     print("Frozen:", args.output)
+    if missing:
+        print("Missing condition/seed pairs:", missing)
 
 
 if __name__ == "__main__":

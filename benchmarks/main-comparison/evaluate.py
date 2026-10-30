@@ -49,8 +49,7 @@ def main():
     if checkpoint.get("protocol_sha256") and args.protocol is None:
         parser.error("This checkpoint requires --protocol")
     if protocol:
-        if not checkpoint_matches_protocol(checkpoint, args.protocol, protocol):
-            parser.error("Checkpoint was not trained with this protocol")
+        selected_entry = None
         if args.limit is not None or args.beam_size != protocol["beam_size"]:
             parser.error("Final protocol requires full population and the registered beam size")
         if args.split == "test":
@@ -61,6 +60,12 @@ def main():
                     or selection["data_signature"] != data.signature
                     or file_hash(args.checkpoint) not in [r["sha256"] for r in selection["checkpoints"]]):
                 parser.error("Checkpoint/protocol/data not in the frozen selection")
+            selected_entry = next(r for r in selection["checkpoints"] if r["sha256"] == file_hash(args.checkpoint))
+        if not checkpoint_matches_protocol(checkpoint, args.protocol, protocol):
+            if not (selected_entry and selection.get("additional_comparison")
+                    and selected_entry.get("training_deviations")
+                    and checkpoint.get("protocol_sha256") is None):
+                parser.error("Checkpoint was not trained with this protocol or registered as an additional run")
     # Reconstruct GenRec's embedding mode before restoring the complete state.
     inputs, features = load_features(data, "tiger" if name == "genrec" else name,
                                      checkpoint.get("sid_source", "content"))
@@ -91,6 +96,7 @@ def main():
         "selection_metric": checkpoint["selection_metric"], "data_signature": data.signature,
         "protocol_sha256": file_hash(args.protocol) if args.protocol else checkpoint.get("protocol_sha256"),
         "training_protocol_sha256": checkpoint.get("protocol_sha256"),
+        "training_deviations": selected_entry.get("training_deviations", {}) if protocol and selected_entry else {},
         "loss_experiment_sha256": file_hash(args.loss_experiment) if args.loss_experiment else None,
         "target_weighting": checkpoint.get("target_weighting"),
         "selection_sha256": file_hash(args.selection_file) if args.selection_file else None,

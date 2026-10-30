@@ -11,15 +11,24 @@ import numpy as np
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("results", type=Path, nargs="+")
-    parser.add_argument("--selection-file", type=Path, required=True)
+    parser.add_argument("--selection-file", type=Path, nargs="+", required=True)
     parser.add_argument(
         "--output",
         type=Path,
         default=ROOT / "artifacts/benchmarks/final-main/reports/comparison.md",
     )
     args = parser.parse_args()
-    selection = json.loads(args.selection_file.read_text())
-    checkpoints = {r["sha256"]: r for r in selection["checkpoints"]}
+    selections = [json.loads(path.read_text()) for path in args.selection_file]
+    selection = selections[0]
+    checkpoints, selection_hashes = {}, {}
+    for path, manifest in zip(args.selection_file, selections):
+        if any(manifest[key] != selection[key] for key in ("protocol_sha256", "data_signature")):
+            parser.error("Selections use different evaluation protocols or datasets")
+        for row in manifest["checkpoints"]:
+            if row["sha256"] in checkpoints:
+                parser.error("Checkpoint appears in multiple selections")
+            checkpoints[row["sha256"]] = row
+            selection_hashes[row["sha256"]] = file_hash(path)
     runs, seen, reference = {}, set(), None
     for path in args.results:
         result = json.loads(path.read_text())
@@ -28,7 +37,7 @@ def main():
             digest not in checkpoints
             or digest in seen
             or result["split"] != "test"
-            or result.get("selection_sha256") != file_hash(args.selection_file)
+            or result.get("selection_sha256") != selection_hashes.get(digest)
             or result["protocol_sha256"] != selection["protocol_sha256"]
             or result["data_signature"] != selection["data_signature"]
             or result["candidate_catalog"] != "all"
@@ -52,6 +61,8 @@ def main():
         if np.any((rows["rank"] < 0) | (rows["rank"] > 50)):
             parser.error("Invalid per-user ranks")
         condition, seed = checkpoints[digest]["condition"], checkpoints[digest]["seed"]
+        if seed in runs.get(condition, {}):
+            parser.error(f"Duplicate condition/seed: {condition}, {seed}")
         runs.setdefault(condition, {})[seed] = rows["rank"]
         seen.add(digest)
     if seen != set(checkpoints):
@@ -59,9 +70,13 @@ def main():
     lines = [
         "# Final benchmark",
         "",
-        "Percentages: mean ± sample SD over training seeds (ItemKNN is deterministic).",
+        "Percentages: mean ± sample SD over available training seeds. SD is N/A for a single run; ItemKNN is deterministic.",
         "",
     ]
+    lines += ["| Condition | Available seeds |", "|---|---|"]
+    for name, seed_runs in sorted(runs.items()):
+        lines.append(f"| {name} | {', '.join(map(str, sorted(seed_runs)))} |")
+    lines.append("")
     summary = {}
     for group in GROUPS:
         mask = (
@@ -96,10 +111,11 @@ def main():
                 ).mean(axis=1)
                 mean, sd = (
                     float(per_seed.mean()),
-                    float(per_seed.std(ddof=1)) if len(per_seed) > 1 else 0.0,
+                    float(per_seed.std(ddof=1)) if len(per_seed) > 1 else None,
                 )
                 values[metric] = {"mean": mean, "sd": sd, "seeds": len(per_seed)}
-                cells.append(f"{100 * mean:.3f} ± {100 * sd:.3f}")
+                cells.append(f"{100 * mean:.3f} ± {100 * sd:.3f}" if sd is not None
+                             else f"{100 * mean:.3f} (SD N/A)")
             summary[group][name] = values
             lines.append(f"| {name} | " + " | ".join(cells) + " |")
         lines.append("")
@@ -110,15 +126,18 @@ def main():
         "Intervals condition on this split and these fitted seeds; they do not include dataset/split uncertainty.",
         "Subgroup comparisons are exploratory; the registered primary comparison is GenRec C with Two-Tower SIDs vs Two-Tower on all targets. A/B/D are additional ablations, not test-selected replacements for C.",
         "",
-        "| Model | Group | Δ percentage points | 95% interval |",
-        "|---|---|---:|---:|",
+        "| Model | Group | Matched seeds | Δ percentage points | 95% interval |",
+        "|---|---|---|---:|---:|",
     ]
     paired = []
-    base = runs["two_tower"]
+    base = runs.get("two_tower", {})
     for name, seed_runs in sorted(runs.items()):
         if name == "two_tower":
             continue
         seeds = sorted(set(seed_runs) & set(base))
+        if not seeds:
+            lines.append(f"| {name} | — | none | N/A | No matched Two-Tower seeds |")
+            continue
         difference = np.stack(
             [(seed_runs[s] > 0).astype(float) - (base[s] > 0) for s in seeds]
         ).mean(axis=0)
@@ -152,17 +171,22 @@ def main():
                 }
             )
             lines.append(
-                f"| {name} | {group} | {100 * delta.mean():.3f} | [{100 * low:.3f}, {100 * high:.3f}] |"
+                f"| {name} | {group} | {', '.join(map(str, seeds))} | {100 * delta.mean():.3f} | [{100 * low:.3f}, {100 * high:.3f}] |"
             )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text("\n".join(lines) + "\n")
     save_json(
         args.output.with_suffix(".json"),
         {
-            "selection_sha256": file_hash(args.selection_file),
+            "selection_sha256": file_hash(args.selection_file[0]),
+            "selection_files": {str(path): file_hash(path) for path in args.selection_file},
             "results": {str(p): file_hash(p) for p in args.results},
             "metrics": summary,
             "paired": paired,
+            "available_seeds": {name: sorted(seed_runs) for name, seed_runs in runs.items()},
+            "missing_runs": selection.get("missing_runs", []),
+            "training_deviations": {row["condition"]: row["training_deviations"]
+                                    for row in checkpoints.values() if row.get("training_deviations")},
         },
     )
     print("Saved:", args.output)
