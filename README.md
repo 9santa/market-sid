@@ -8,6 +8,42 @@ The main question is whether product metadata can provide useful item addresses 
 
 Start with the [research notebook](docs/experiments/README.md) for the experiments and results. The [baseline notes](docs/experiments/results/baseline_development.md) cover SASRec and Two-Tower work. New runs can use the [experiment template](docs/experiments/protocols/experiment_template.md).
 
+## Results
+
+Amazon Reviews 2023: Electronics, Cell Phones and Accessories, and Office Products.
+The final benchmark uses a new user cohort: **78,328 test users and 125,099 items**.
+Evaluation uses the full catalog, filters each user's complete seen history, and
+uses beam search 100 for generative models. Checkpoints are selected by validation Recall@50.
+
+**Recall@50 (%), averaged over available runs.** All GenRec rows use variant C;
+batch sizes below refer to training. TIGER is the repository's adapted implementation.
+
+| Model | All | Mid | Tail | Unseen |
+|---|---:|---:|---:|---:|
+| TIGER · batch 1024 | **5.824** | 1.544 | 0.112 | 0.000 |
+| GenRec · Two-Tower SID | 5.778 | 0.851 | 0.109 | 0.030 |
+| GenRec · Two-Tower SID · batch 8192 | 5.560 | 0.824 | 0.109 | 0.030 |
+| GenRec · BGE SID | 5.149 | 0.485 | 0.078 | 0.015 |
+| GRU4Rec | 5.054 | 0.464 | 0.019 | 0.000 |
+| Content Two-Tower | 4.888 | **1.640** | 0.774 | **0.632** |
+| GenRec · BGE SID · batch 16384 | 4.839 | 0.349 | 0.066 | 0.000 |
+| SASRec | 4.378 | 0.124 | 0.011 | 0.000 |
+| LightGCN | 3.513 | 0.567 | 0.109 | 0.000 |
+| ItemKNN | 0.651 | 0.840 | **0.811** | 0.000 |
+
+- **TIGER and GenRec with Two-Tower SIDs lead overall.** Their Recall@50 difference
+  is small: 36 hits, with a paired 95% interval spanning zero.
+- **Two-Tower embeddings helped SID construction:** GenRec's overall Recall@50
+  is about 12.2% higher than with BGE SIDs. Larger training batches did not improve it.
+- **Rare-item quality remains a limitation.** Content Two-Tower leads mid/unseen;
+  ItemKNN has the highest observed tail recall. GenRec's overall advantage does not
+  establish an advantage on rare items.
+
+See the [benchmark protocol](docs/experiments/protocols/final_benchmark.md) and
+[full report](artifacts/benchmarks/final-main/reports/comparison_final_20261030.md)
+for Recall/NDCG@10/20/50 and paired comparisons. The full report is a local generated
+artifact; the table above is retained in Git.
+
 ## Approach
 
 ```text
@@ -49,7 +85,7 @@ The main pipeline combines three categories from the `Amazon Reviews 2023` datas
 
 The pipeline takes 5-core rating data, filters and samples users, applies iterative k-core filtering, and splits each user's history chronologically (leave-one-out): last event for test, previous event for validation, earlier events for training. Ratings count as implicit interactions; there is no global date cutoff.
 
-The saved snapshot has **80,471 users**, **134,288 items**, and **574,699 training examples**. Regenerating the dataset may change these counts. Item ID 0 is reserved for padding.
+The original exploratory snapshot has **80,471 users**, **134,288 items**, and **574,699 training examples**; the final benchmark above uses a separate cohort. Regenerating the dataset may change these counts. Item ID 0 is reserved for padding.
 
 Popularity groups use training interaction counts:
 
