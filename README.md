@@ -18,21 +18,26 @@ uses beam search 100 for generative models. Checkpoints are selected by validati
 **Recall@50 (%), averaged over available runs.** All GenRec rows use variant C;
 batch sizes below refer to training. TIGER is the repository's adapted implementation.
 
-| Model | All | Mid | Tail | Unseen |
-|---|---:|---:|---:|---:|
-| TIGER · batch 1024 | **5.824** | 1.544 | 0.112 | 0.000 |
-| GenRec · Two-Tower SID | 5.778 | 0.851 | 0.109 | 0.030 |
-| GenRec · Two-Tower SID · batch 8192 | 5.560 | 0.824 | 0.109 | 0.030 |
-| GenRec · BGE SID | 5.149 | 0.485 | 0.078 | 0.015 |
-| GRU4Rec | 5.054 | 0.464 | 0.019 | 0.000 |
-| Content Two-Tower | 4.888 | **1.640** | 0.774 | **0.632** |
-| GenRec · BGE SID · batch 16384 | 4.839 | 0.349 | 0.066 | 0.000 |
-| SASRec | 4.378 | 0.124 | 0.011 | 0.000 |
-| LightGCN | 3.513 | 0.567 | 0.109 | 0.000 |
-| ItemKNN | 0.651 | 0.840 | **0.811** | 0.000 |
+| Model | Trainable params (M) | All | Mid | Tail | Unseen |
+|---|---:|---:|---:|---:|---:|
+| TIGER · batch 1024 | 4.847 | **5.824** | 1.544 | 0.112 | 0.000 |
+| GenRec · Two-Tower SID | 1.238 | 5.778 | 0.851 | 0.109 | 0.030 |
+| GenRec · Two-Tower SID · batch 8192 | 1.238 | 5.560 | 0.824 | 0.109 | 0.030 |
+| GenRec · BGE SID | 1.243 | 5.149 | 0.485 | 0.078 | 0.015 |
+| GRU4Rec | 16.128 | 5.054 | 0.464 | 0.019 | 0.000 |
+| Content Two-Tower | 0.733 | 4.888 | **1.640** | 0.774 | **0.632** |
+| GenRec · BGE SID · batch 16384 | 1.243 | 4.839 | 0.349 | 0.066 | 0.000 |
+| SASRec | 8.160 | 4.378 | 0.124 | 0.011 | 0.000 |
+| LightGCN | 13.019 | 3.513 | 0.567 | 0.109 | 0.000 |
+| ItemKNN | — | 0.651 | 0.840 | **0.811** | 0.000 |
+
+Parameter counts cover the recommender only, excluding preprocessing models
+(BGE, RQ-VAE, and the SID teacher) and cached features; shared weights count once.
+ItemKNN stores a similarity matrix rather than neural parameters.
 
 - **TIGER and GenRec with Two-Tower SIDs lead overall.** Their Recall@50 difference
-  is small: 36 hits, with a paired 95% interval spanning zero.
+  is small: 36 hits, with a paired 95% interval spanning zero. GenRec achieves this
+  with **3.9× fewer trainable parameters** (1.24M versus TIGER's 4.85M).
 - **Two-Tower embeddings helped SID construction:** GenRec's overall Recall@50
   is about 12.2% higher than with BGE SIDs. Larger training batches did not improve it.
 - **Rare-item quality remains a limitation.** Content Two-Tower leads mid/unseen;
